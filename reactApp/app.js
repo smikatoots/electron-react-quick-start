@@ -53,7 +53,6 @@ class MyEditor extends React.Component {
      ));
   }
 
-<<<<<<< HEAD
   handleChange(e) {
     var string = 'FONT_SIZE_' + e.target.value;
     console.log(string);
@@ -63,7 +62,6 @@ class MyEditor extends React.Component {
      ));
   }
 
-=======
   _onUnderlineClick() {
      this.onChange(RichUtils.toggleInlineStyle(
         this.state.editorState,
@@ -122,7 +120,6 @@ class MyEditor extends React.Component {
       ));
   }
 
->>>>>>> 91511b3c73dc10a445869c453e6b3c11373cc76d
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
