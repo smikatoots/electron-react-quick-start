@@ -1,6 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 import {Editor, EditorState, RichUtils} from 'draft-js';
+import Toolbar from './components/Toolbar'
 
 /* This can check if your electron app can communicate with your backend */
 // fetch('http://localhost:3000')
@@ -9,6 +10,18 @@ import {Editor, EditorState, RichUtils} from 'draft-js';
 // .catch(err => {throw err})
 
 const styleMap = {
+  'FONT_SIZE_8': {
+    fontSize: 8,
+  },
+  'FONT_SIZE_12': {
+    fontSize: 12,
+  },
+  'FONT_SIZE_16': {
+    fontSize: 16,
+  },
+  'FONT_SIZE_24': {
+    fontSize: 24,
+  },
    'STRIKETHROUGH': {
       textDecoration: 'line-through',
    },
@@ -74,13 +87,11 @@ class MyEditor extends React.Component {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
         <h1>Draft.js Editor</h1>
+        <Toolbar handleFontSizeChange={this.handleChange.bind(this)}/>
         <button onClick={() => this._onFormatClick('BOLD')}>Bold</button>
         <button onClick={() => this._onFormatClick('ITALIC')}>Italic</button>
         <button onClick={() => this._onFormatClick('UNDERLINE')}>Underline</button>
         <button onClick={() => this._onFormatClick('CODE')}>Code</button>
-        <button onClick={() => this._onFormatClick('STRIKETHROUGH')}>Strikethrough</button>
-        <select onChange={(event) => this._onColorChange(event)}>
-            <option value="red">Red</option>
             <option value="yellow">Yellow</option>
             <option value="blue">Blue</option>
         </select>
@@ -91,6 +102,7 @@ class MyEditor extends React.Component {
           <Editor
             customStyleMap={styleMap}
             editorState={this.state.editorState}
+            customStyleMap={styleMap}
             onChange={this.onChange}
             textAlignment={this.state.editorState}
           />
@@ -99,9 +111,6 @@ class MyEditor extends React.Component {
     );
   }
 }
-
-
-
 
 ReactDOM.render(<MyEditor />,
    document.getElementById('root'));
