@@ -8,10 +8,15 @@ import {Editor, EditorState, RichUtils} from 'draft-js';
 // .then(text => console.log(text))
 // .catch(err => {throw err})
 
+let fontColor = '';
+
 class MyEditor extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {editorState: EditorState.createEmpty()};
+    this.state = {
+        editorState: EditorState.createEmpty(),
+        fontColor: '',
+    };
     this.onChange = (editorState) => this.setState({editorState});
   }
 
@@ -43,7 +48,33 @@ class MyEditor extends React.Component {
      ));
   }
 
+  _onStrikeClick() {
+     this.onChange(RichUtils.toggleInlineStyle(
+        this.state.editorState,
+        'STRIKETHROUGH'
+     ));
+  }
+
+  _onColorChange(event) {
+     fontColor = event.target.value;
+     this.setState({fontColor: event.target.value})
+    //  console.log(this.state.fontColor);
+     this.onChange(RichUtils.toggleInlineStyle(
+        this.state.editorState,
+        'FONT-COLOR'
+     ));
+  }
+
+
   render() {
+    const styleMap = {
+       'STRIKETHROUGH': {
+          textDecoration: 'line-through',
+       },
+       'FONT-COLOR': {
+          color: fontColor,
+       },
+    };
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
         <h1>Draft.js Editor</h1>
@@ -51,8 +82,15 @@ class MyEditor extends React.Component {
         <button onClick={this._onItalicClick.bind(this)}>Italic</button>
         <button onClick={this._onUnderlineClick.bind(this)}>Underline</button>
         <button onClick={this._onCodeClick.bind(this)}>Code</button>
+        <button onClick={this._onStrikeClick.bind(this)}>Strikethrough</button>
+        <select onChange={(e) => this._onColorChange(e)}>
+            <option value="red">Red</option>
+            <option value="yellow">Yellow</option>
+            <option value="blue">Blue</option>
+        </select>
         <div className='editor' style={{border: '1px solid grey', padding: '6px'}}>
           <Editor
+            customStyleMap={styleMap}
             editorState={this.state.editorState}
             onChange={this.onChange}
           />
@@ -61,6 +99,8 @@ class MyEditor extends React.Component {
     );
   }
 }
+
+
 
 
 ReactDOM.render(<MyEditor />,
