@@ -144,6 +144,7 @@ class EditorApp extends React.Component {
 
   render() {
     return (
+      <BrowserRouter>
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
         <h1>Jam Editor</h1>
         <Toolbar
@@ -173,6 +174,7 @@ class EditorApp extends React.Component {
             onChange={this.onChange}
             blockRenderMap={extendedBlockRenderMap}
           />
+        </div>
         </div>
       </BrowserRouter>
     );
