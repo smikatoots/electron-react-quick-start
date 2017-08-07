@@ -77,6 +77,27 @@ class MyEditor extends React.Component {
      ));
   }
 
+   _onLeftAClick() {
+      this.onChange(RichUtils.toggleInlineStyle(
+          this.textAlignment,
+          'left'
+      ));
+  }
+
+   _onRightAClick() {
+      this.onChange(RichUtils.toggleInlineStyle(
+          this.textAlignment,
+          'right'
+      ));
+  }
+
+   _onCenterAClick() {
+      this.onChange(RichUtils.toggleInlineStyle(
+          this.textAlignment,
+          'center'
+      ));
+  }
+
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
@@ -91,11 +112,15 @@ class MyEditor extends React.Component {
             <option value="yellow">Yellow</option>
             <option value="blue">Blue</option>
         </select>
+        {/* <button onClick={this._onLeftAClick.bind(this)}>Align Left</button>
+        <button onClick={this._onCenterAClick.bind(this)}>Align Center</button>
+        <button onClick={this._onRightAClick.bind(this)}>Align Right</button> */}
         <div className='editor' style={{border: '1px solid grey', padding: '6px'}}>
           <Editor
             customStyleMap={styleMap}
             editorState={this.state.editorState}
             onChange={this.onChange}
+            textAlignment='right'
           />
         </div>
       </div>
