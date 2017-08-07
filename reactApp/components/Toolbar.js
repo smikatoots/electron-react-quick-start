@@ -13,7 +13,7 @@ class Toolbar extends React.Component {
           <button type="button" onClick={() => this.props.handleFormatClick('BOLD')}>Bold</button>
           <button type="button" onClick={() => this.props.handleFormatClick('ITALIC')}>Italic</button>
           <button type="button" onClick={() => this.props.handleFormatClick('UNDERLINE')}>Underline</button>
-          <button type="button"onClick={() => this.props.handleFormatClick('CODE')}>Code</button>
+          <button type="button" onClick={() => this.props.handleFormatClick('CODE')}>Code</button>
           <button type="button" onClick={() => this.props.handleFormatClick('STRIKETHROUGH')}>Strikethrough</button>
           <select onChange={(event) => this.props.handleColorChange(event)}>
               <option value="red">Red</option>

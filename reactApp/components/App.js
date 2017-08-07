@@ -1,6 +1,5 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-import { Router, Route, Switch } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 import { Editor, EditorState, RichUtils, Immutable } from 'draft-js';
 import Toolbar from './Toolbar'

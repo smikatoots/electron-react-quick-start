@@ -1,9 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-import { Router, Route, Switch } from 'react-router';
-import { BrowserRouter } from 'react-router-dom';
+import { Router, Route, Switch, BrowserRouter } from 'react-router-dom';
 import { Editor, EditorState, RichUtils, Immutable } from 'draft-js';
-import Toolbar from './components/Toolbar'
 import Login from './components/Login'
 import Register from './components/Register'
 import EditorApp from './components/App'
@@ -14,8 +12,25 @@ import EditorApp from './components/App'
 // .then(text => console.log(text))
 // .catch(err => {throw err})
 
+class Main extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+        <BrowserRouter>
+            {/* <Switch> */}
+                <Route exact path='/' component={EditorApp}/>
+                <Route path='/login' component={Login}/>
+                {/* both /roster and /roster/:number begin with /roster */}
+                <Route path='/register' component={Register}/>
+            {/* </Switch> */}
+        </BrowserRouter>
+    );
+  }
+}
+
 ReactDOM.render((
-    <BrowserRouter>
-        <EditorApp />
-    </BrowserRouter>
+    <Main />
 ), document.getElementById('root'));
