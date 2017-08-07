@@ -9,6 +9,51 @@ import Toolbar from './components/Toolbar'
 // .then(text => console.log(text))
 // .catch(err => {throw err})
 
+class AligningWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      textAlign: 'left'
+    }
+  }
+  textAlignCenter() {
+    this.setState({
+        textAlign: 'center'
+    })
+  }
+
+  textAlignLeft() {
+    this.setState({
+        textAlign: 'left'
+    })
+  }
+
+  textAlignRight() {
+    this.setState({
+        textAlign: 'right'
+    })
+  }
+
+  render() {
+    return (
+      <div className={this.state.textAlign}>
+        <button onClick={() => this.textAlignLeft()}>Align Left</button>
+        <button onClick={() => this.textAlignCenter()}>Align Center</button>
+        <button onClick={() => this.textAlignRight()}>Align Right</button>
+        {this.props.children}
+      </div>
+    );
+  }
+}
+
+const blockRenderMap = Immutable.Map({
+  'AligningWrapper': {
+    wrapper: AligningWrapper
+  }
+});
+
+const extendedBlockRenderMap = Draft.DefaultDraftBlockRenderMap.merge(blockRenderMap);
+
 const styleMap = {
     'FONT_SIZE_8': {
       fontSize: 8,
@@ -113,7 +158,7 @@ class MyEditor extends React.Component {
             customStyleMap={styleMap}
             editorState={this.state.editorState}
             onChange={this.onChange}
-            textAlignment={this.state.textAlign}
+            blockRenderMap={extendedBlockRenderMap}
           />
         </div>
       </div>
