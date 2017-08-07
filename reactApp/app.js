@@ -10,30 +10,30 @@ import Toolbar from './components/Toolbar'
 // .catch(err => {throw err})
 
 const styleMap = {
-  'FONT_SIZE_8': {
-    fontSize: 8,
-  },
-  'FONT_SIZE_12': {
-    fontSize: 12,
-  },
-  'FONT_SIZE_16': {
-    fontSize: 16,
-  },
-  'FONT_SIZE_24': {
-    fontSize: 24,
-  },
-   'STRIKETHROUGH': {
+    'FONT_SIZE_8': {
+      fontSize: 8,
+    },
+    'FONT_SIZE_12': {
+      fontSize: 12,
+    },
+    'FONT_SIZE_16': {
+      fontSize: 16,
+    },
+    'FONT_SIZE_24': {
+      fontSize: 24,
+    },
+    'STRIKETHROUGH': {
       textDecoration: 'line-through',
-   },
-   'FONT-COLOR-RED': {
+    },
+    'FONT_COLOR_RED': {
       color: 'red',
-   },
-   'FONT-COLOR-BLUE': {
+    },
+    'FONT_COLOR_BLUE': {
       color: 'blue',
-   },
-   'FONT-COLOR-YELLOW': {
+    },
+    'FONT_COLOR_YELLOW': {
       color: 'yellow',
-   },
+    },
 };
 
 class MyEditor extends React.Component {
@@ -41,7 +41,6 @@ class MyEditor extends React.Component {
     super(props);
     this.state = {
         editorState: EditorState.createEmpty(),
-        fontColor: '',
     };
     this.onChange = (editorState) => this.setState({editorState});
   }
@@ -55,7 +54,6 @@ class MyEditor extends React.Component {
 
   handleChange(e) {
     var string = 'FONT_SIZE_' + e.target.value;
-    console.log(string);
     this.onChange(RichUtils.toggleInlineStyle(
         this.state.editorState,
         string
@@ -63,8 +61,7 @@ class MyEditor extends React.Component {
   }
 
   _onColorChange(event) {
-     const styleMapColor = 'FONT-COLOR-' + event.target.value.toUpperCase();
-     this.setState({fontColor: event.target.value})
+     const styleMapColor = 'FONT_COLOR_' + event.target.value.toUpperCase();
      this.onChange(RichUtils.toggleInlineStyle(
         this.state.editorState,
         styleMapColor
