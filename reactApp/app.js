@@ -22,12 +22,27 @@ const styleMap = {
   'FONT_SIZE_24': {
     fontSize: 24,
   },
+   'STRIKETHROUGH': {
+      textDecoration: 'line-through',
+   },
+   'FONT-COLOR-RED': {
+      color: 'red',
+   },
+   'FONT-COLOR-BLUE': {
+      color: 'blue',
+   },
+   'FONT-COLOR-YELLOW': {
+      color: 'yellow',
+   },
 };
 
 class MyEditor extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {editorState: EditorState.createEmpty()};
+    this.state = {
+        editorState: EditorState.createEmpty(),
+        fontColor: '',
+    };
     this.onChange = (editorState) => this.setState({editorState});
   }
 
@@ -38,6 +53,7 @@ class MyEditor extends React.Component {
      ));
   }
 
+<<<<<<< HEAD
   handleChange(e) {
     var string = 'FONT_SIZE_' + e.target.value;
     console.log(string);
@@ -47,23 +63,99 @@ class MyEditor extends React.Component {
      ));
   }
 
+=======
+  _onUnderlineClick() {
+     this.onChange(RichUtils.toggleInlineStyle(
+        this.state.editorState,
+        'UNDERLINE'
+     ));
+  }
+
+  _onItalicClick() {
+     this.onChange(RichUtils.toggleInlineStyle(
+        this.state.editorState,
+        'ITALIC'
+     ));
+  }
+
+  _onCodeClick() {
+     this.onChange(RichUtils.toggleInlineStyle(
+        this.state.editorState,
+        'CODE'
+     ));
+  }
+
+  _onStrikeClick() {
+     this.onChange(RichUtils.toggleInlineStyle(
+        this.state.editorState,
+        'STRIKETHROUGH'
+     ));
+  }
+
+  _onColorChange(event) {
+     const styleMapColor = 'FONT-COLOR-' + event.target.value.toUpperCase();
+     this.setState({fontColor: event.target.value})
+     this.onChange(RichUtils.toggleInlineStyle(
+        this.state.editorState,
+        styleMapColor
+     ));
+  }
+
+   _onLeftAClick() {
+      this.onChange(RichUtils.toggleInlineStyle(
+          this.textAlignment,
+          'left'
+      ));
+  }
+
+   _onRightAClick() {
+      this.onChange(RichUtils.toggleInlineStyle(
+          this.textAlignment,
+          'right'
+      ));
+  }
+
+   _onCenterAClick() {
+      this.onChange(RichUtils.toggleInlineStyle(
+          this.textAlignment,
+          'center'
+      ));
+  }
+
+>>>>>>> 91511b3c73dc10a445869c453e6b3c11373cc76d
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
         <h1>Draft.js Editor</h1>
         <Toolbar handleFontSizeChange={this.handleChange.bind(this)}/>
         <button onClick={this._onBoldClick.bind(this)}>Bold</button>
+        <button onClick={this._onItalicClick.bind(this)}>Italic</button>
+        <button onClick={this._onUnderlineClick.bind(this)}>Underline</button>
+        <button onClick={this._onCodeClick.bind(this)}>Code</button>
+        <button onClick={this._onStrikeClick.bind(this)}>Strikethrough</button>
+        <select onChange={(e) => this._onColorChange(e)}>
+            <option value="red">Red</option>
+            <option value="yellow">Yellow</option>
+            <option value="blue">Blue</option>
+        </select>
+        {/* <button onClick={this._onLeftAClick.bind(this)}>Align Left</button>
+        <button onClick={this._onCenterAClick.bind(this)}>Align Center</button>
+        <button onClick={this._onRightAClick.bind(this)}>Align Right</button> */}
         <div className='editor' style={{border: '1px solid grey', padding: '6px'}}>
           <Editor
+            customStyleMap={styleMap}
             editorState={this.state.editorState}
             customStyleMap={styleMap}
             onChange={this.onChange}
+            textAlignment='right'
           />
         </div>
       </div>
     );
   }
 }
+
+
 
 
 ReactDOM.render(<MyEditor />,
