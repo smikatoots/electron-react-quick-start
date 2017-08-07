@@ -53,6 +53,15 @@ class MyEditor extends React.Component {
       ));
   }
 
+  handleChange(e) {
+    var string = 'FONT_SIZE_' + e.target.value;
+    console.log(string);
+    this.onChange(RichUtils.toggleInlineStyle(
+        this.state.editorState,
+        string
+    ));
+  }
+
   _onColorChange(event) {
      const styleMapColor = 'FONT-COLOR-' + event.target.value.toUpperCase();
      this.setState({fontColor: event.target.value})
@@ -62,26 +71,26 @@ class MyEditor extends React.Component {
      ));
   }
 
-   _onLeftAClick() {
-      this.onChange(RichUtils.toggleBlockType(
-          this.state.editorState,
-          'left'
-      ));
-  }
-
-   _onRightAClick() {
-      this.onChange(RichUtils.toggleBlockType(
-          this.state.editorState,
-          'right'
-      ));
-  }
-
-   _onCenterAClick() {
-      this.onChange(RichUtils.toggleBlockType(
-          this.state.editorState,
-          'center'
-      ));
-  }
+  //  _onLeftAClick() {
+  //     this.onChange(RichUtils.toggleBlockType(
+  //         this.state.editorState,
+  //         'left'
+  //     ));
+  // }
+  //
+  //  _onRightAClick() {
+  //     this.onChange(RichUtils.toggleBlockType(
+  //         this.state.editorState,
+  //         'right'
+  //     ));
+  // }
+  //
+  //  _onCenterAClick() {
+  //     this.onChange(RichUtils.toggleBlockType(
+  //         this.state.editorState,
+  //         'center'
+  //     ));
+  // }
 
   render() {
     return (
@@ -92,19 +101,21 @@ class MyEditor extends React.Component {
         <button onClick={() => this._onFormatClick('ITALIC')}>Italic</button>
         <button onClick={() => this._onFormatClick('UNDERLINE')}>Underline</button>
         <button onClick={() => this._onFormatClick('CODE')}>Code</button>
+        <button onClick={() => this._onFormatClick('STRIKETHROUGH')}>Strikethrough</button>
+        <select onChange={(event) => this._onColorChange(event)}>
+            <option value="red">Red</option>
             <option value="yellow">Yellow</option>
             <option value="blue">Blue</option>
         </select>
-        <button onClick={this._onLeftAClick.bind(this)}>Align Left</button>
+        {/* <button onClick={this._onLeftAClick.bind(this)}>Align Left</button>
         <button onClick={this._onCenterAClick.bind(this)}>Align Center</button>
-        <button onClick={this._onRightAClick.bind(this)}>Align Right</button>
+        <button onClick={this._onRightAClick.bind(this)}>Align Right</button> */}
         <div className='editor' style={{border: '1px solid grey', padding: '6px'}}>
           <Editor
             customStyleMap={styleMap}
             editorState={this.state.editorState}
-            customStyleMap={styleMap}
             onChange={this.onChange}
-            textAlignment={this.state.editorState}
+            // textAlignment={this.state.editorState}
           />
         </div>
       </div>
