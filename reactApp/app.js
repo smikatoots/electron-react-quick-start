@@ -8,7 +8,20 @@ import {Editor, EditorState, RichUtils} from 'draft-js';
 // .then(text => console.log(text))
 // .catch(err => {throw err})
 
-let fontColor = '';
+const styleMap = {
+   'STRIKETHROUGH': {
+      textDecoration: 'line-through',
+   },
+   'FONT-COLOR-RED': {
+      color: 'red',
+   },
+   'FONT-COLOR-BLUE': {
+      color: 'blue',
+   },
+   'FONT-COLOR-YELLOW': {
+      color: 'yellow',
+   },
+};
 
 class MyEditor extends React.Component {
   constructor(props) {
@@ -56,25 +69,15 @@ class MyEditor extends React.Component {
   }
 
   _onColorChange(event) {
-     fontColor = event.target.value;
+     const styleMapColor = 'FONT-COLOR-' + event.target.value.toUpperCase();
      this.setState({fontColor: event.target.value})
-    //  console.log(this.state.fontColor);
      this.onChange(RichUtils.toggleInlineStyle(
         this.state.editorState,
-        'FONT-COLOR'
+        styleMapColor
      ));
   }
 
-
   render() {
-    const styleMap = {
-       'STRIKETHROUGH': {
-          textDecoration: 'line-through',
-       },
-       'FONT-COLOR': {
-          color: fontColor,
-       },
-    };
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
         <h1>Draft.js Editor</h1>
