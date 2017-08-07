@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-
+import { BrowserRouter } from 'react-router-dom';
 import EditorApp from './components/App'
 
 /* This can check if your electron app can communicate with your backend */
@@ -9,5 +9,8 @@ import EditorApp from './components/App'
 // .then(text => console.log(text))
 // .catch(err => {throw err})
 
-
-ReactDOM.render(<EditorApp />, document.getElementById('root'));
+ReactDOM.render((
+    <BrowserRouter>
+        <EditorApp />
+    </BrowserRouter>
+), document.getElementById('root'));
