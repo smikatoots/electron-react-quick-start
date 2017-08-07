@@ -13,25 +13,25 @@ import Register from './Register'
 // .then(text => console.log(text))
 // .catch(err => {throw err})
 
-// class AligningWrapper extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       textAlign: 'left'
-//     }
-//   }
+class AligningWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      textAlign: 'left'
+    }
+  }
 
-//   render() {
-//     return (
-//       <div className={this.state.textAlign}>
-//         <button onClick={() => this.textAlignLeft()}>Align Left</button>
-//         <button onClick={() => this.textAlignCenter()}>Align Center</button>
-//         <button onClick={() => this.textAlignRight()}>Align Right</button>
-//         {this.props.children}
-//       </div>
-//     );
-//   }
-// }
+  render() {
+    return (
+      <div className={this.state.textAlign}>
+        <button onClick={() => this.textAlignLeft()}>Align Left</button>
+        <button onClick={() => this.textAlignCenter()}>Align Center</button>
+        <button onClick={() => this.textAlignRight()}>Align Right</button>
+        {this.props.children}
+      </div>
+    );
+  }
+}
 
 const blockRenderMap = Immutable.Map({
   'rightAlign': {wrapper: (<div className='right'></div>)},
@@ -125,14 +125,14 @@ class EditorApp extends React.Component {
           'leftAlign'
       ));
   }
-  
+
    _onRightAClick() {
       this.onChange(RichUtils.toggleBlockType(
           this.state.editorState,
           'rightAlign'
       ));
   }
-  
+
    _onCenterAClick() {
       this.onChange(RichUtils.toggleBlockType(
           this.state.editorState,
@@ -143,7 +143,6 @@ class EditorApp extends React.Component {
 
   render() {
     return (
-      <BrowserRouter>
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
         <h1>Jam Editor</h1>
         <Toolbar
@@ -152,20 +151,10 @@ class EditorApp extends React.Component {
           handleColorChange={() => this._onColorChange()}
           bulletList={this._onBulletList.bind(this)}
           numberList={this._onNumberList.bind(this)}
+          handleLeftAClick={() => this._onLeftAClick()}
+          handleCenterAClick={() => this._onCenterAClick()}
+          handleRightAClick={() => this._onRightAClick()}
           />
-        <button onClick={() => this._onFormatClick('BOLD')}>Bold</button>
-        <button onClick={() => this._onFormatClick('ITALIC')}>Italic</button>
-        <button onClick={() => this._onFormatClick('UNDERLINE')}>Underline</button>
-        <button onClick={() => this._onFormatClick('CODE')}>Code</button>
-        <button onClick={() => this._onFormatClick('STRIKETHROUGH')}>Strikethrough</button>
-        <select onChange={(event) => this._onColorChange(event)}>
-            <option value="red">Red</option>
-            <option value="yellow">Yellow</option>
-            <option value="blue">Blue</option>
-        </select>
-         <button onClick={this._onLeftAClick.bind(this)}>Align Left</button>
-        <button onClick={this._onCenterAClick.bind(this)}>Align Center</button>
-        <button onClick={this._onRightAClick.bind(this)}>Align Right</button> 
         <div className='editor' style={{border: '1px solid grey', padding: '6px'}}>
           <Editor
             customStyleMap={styleMap}
@@ -174,8 +163,7 @@ class EditorApp extends React.Component {
             blockRenderMap={extendedBlockRenderMap}
           />
         </div>
-        </div>
-      </BrowserRouter>
+      </div>
     );
   }
 }

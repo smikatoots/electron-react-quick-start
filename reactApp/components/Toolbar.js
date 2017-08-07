@@ -28,6 +28,9 @@ class Toolbar extends React.Component {
           </select>
           <button type="button" onClick={this.props.bulletList.bind(this)}>Bullet</button>
           <button type="button" onClick={this.props.numberList.bind(this)}>Number</button>
+          <button type="button" onClick={this.props.handleLeftAClick.bind(this)}>Align Left</button>
+          <button type="button" onClick={this.props.handleCenterAClick.bind(this)}>Align Center</button>
+          <button type="button" onClick={this.props.handleRightAClick.bind(this)}>Align Right</button>
         </form>
       </div>
     );

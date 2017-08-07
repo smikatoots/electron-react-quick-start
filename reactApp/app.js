@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-import { Router, Route, Switch, BrowserRouter } from 'react-router-dom';
+import { Router, Route, Switch, HashRouter } from 'react-router-dom';
 import { Editor, EditorState, RichUtils, Immutable } from 'draft-js';
 import Login from './components/Login'
 import Register from './components/Register'
@@ -19,14 +19,14 @@ class Main extends React.Component {
 
   render() {
     return (
-        <BrowserRouter>
-            {/* <Switch> */}
+        <HashRouter>
+            <Switch>
                 <Route exact path='/' component={EditorApp}/>
-                <Route path='/login' component={Login}/>
+                <Route exact path='/login' component={Login}/>
                 {/* both /roster and /roster/:number begin with /roster */}
                 <Route path='/register' component={Register}/>
-            {/* </Switch> */}
-        </BrowserRouter>
+            </Switch>
+        </HashRouter>
     );
   }
 }
