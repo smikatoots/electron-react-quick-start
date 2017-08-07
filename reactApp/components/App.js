@@ -102,9 +102,23 @@ class EditorApp extends React.Component {
      ));
   }
 
-  // saveChanges() {
-  //    models.Documents.findById()
-  // }
+  _onBulletList(e) {
+    e.preventDefault();
+    this.onChange(
+        RichUtils.toggleBlockType(
+            this.state.editorState,
+            'unordered-list-item'
+    ));
+  }
+
+  _onNumberList(e) {
+    e.preventDefault();
+    this.onChange(
+        RichUtils.toggleBlockType(
+            this.state.editorState,
+            'ordered-list-item'
+    ));
+  }
 
    _onLeftAClick() {
       this.onChange(RichUtils.toggleBlockType(
@@ -127,23 +141,6 @@ class EditorApp extends React.Component {
       ));
   }
 
-  _onBulletList(e) {
-    e.preventDefault();
-    this.onChange(
-        RichUtils.toggleBlockType(
-            this.state.editorState,
-            'unordered-list-item'
-    ));
-  }
-
-  _onNumberList(e) {
-    e.preventDefault();
-    this.onChange(
-        RichUtils.toggleBlockType(
-            this.state.editorState,
-            'ordered-list-item'
-    ));
-  }
 
   render() {
     return (
@@ -151,6 +148,8 @@ class EditorApp extends React.Component {
         <h1>Jam Editor</h1>
         <Toolbar
           handleFontSizeChange={this._onFontSizeChange.bind(this)}
+          handleFormatClick={(style, event) => this._onFormatClick(style, event)}
+          handleColorChange={() => this._onColorChange()}
           bulletList={this._onBulletList.bind(this)}
           numberList={this._onNumberList.bind(this)}
           />
@@ -175,10 +174,9 @@ class EditorApp extends React.Component {
             blockRenderMap={extendedBlockRenderMap}
           />
         </div>
-        {/* <button onClick={() => this.saveChanges()}>SAVE</button> */}
-      </div>
+      </BrowserRouter>
     );
   }
 }
 
-export default EditorApp; 
+export default EditorApp;

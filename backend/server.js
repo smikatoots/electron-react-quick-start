@@ -1,5 +1,52 @@
-const express = require('express')
-const app = express()
+import express from 'express';
+import path  from 'path';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import session from 'express-session';
+import passport from 'passport';
+import LocalStrategy from 'passport-local';
+import mongoose from 'mongoose';
+
+var app = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  secret: 'keyboard cat',
+  store: new MongoStore({mongooseConnection: mongoose.connection})
+}));
+
+passport.serializeUser((user, done) => {
+  done(null, user._id);
+});
+
+passport.deserializeUser((id, done) => {
+  User.findById(id, (err, user) => {
+    done(err, user);
+  });
+});
+
+passport.use(new LocalStrategy(function(username, password, done){
+  User.findOne({ username: username}, function(err, user){
+    if (err) {
+      console.log(err);
+      return done(err);
+    }
+    if (!user) {
+      console.log(user);
+      return done(null, false);
+    }
+    if (user.password !== password) {
+      return done(null, false);
+    }
+    return done(null, user);
+  });
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Example route
 app.get('/', function (req, res) {
