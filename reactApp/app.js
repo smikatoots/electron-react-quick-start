@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-import {Editor, EditorState, RichUtils} from 'draft-js';
+import {Editor, EditorState, RichUtils, Immutable} from 'draft-js';
 import Toolbar from './components/Toolbar'
 
 /* This can check if your electron app can communicate with your backend */
@@ -10,30 +10,30 @@ import Toolbar from './components/Toolbar'
 // .catch(err => {throw err})
 
 const styleMap = {
-  'FONT_SIZE_8': {
-    fontSize: 8,
-  },
-  'FONT_SIZE_12': {
-    fontSize: 12,
-  },
-  'FONT_SIZE_16': {
-    fontSize: 16,
-  },
-  'FONT_SIZE_24': {
-    fontSize: 24,
-  },
-   'STRIKETHROUGH': {
+    'FONT_SIZE_8': {
+      fontSize: 8,
+    },
+    'FONT_SIZE_12': {
+      fontSize: 12,
+    },
+    'FONT_SIZE_16': {
+      fontSize: 16,
+    },
+    'FONT_SIZE_24': {
+      fontSize: 24,
+    },
+    'STRIKETHROUGH': {
       textDecoration: 'line-through',
-   },
-   'FONT-COLOR-RED': {
+    },
+    'FONT_COLOR_RED': {
       color: 'red',
-   },
-   'FONT-COLOR-BLUE': {
+    },
+    'FONT_COLOR_BLUE': {
       color: 'blue',
-   },
-   'FONT-COLOR-YELLOW': {
+    },
+    'FONT_COLOR_YELLOW': {
       color: 'yellow',
-   },
+    },
 };
 
 class MyEditor extends React.Component {
@@ -41,7 +41,7 @@ class MyEditor extends React.Component {
     super(props);
     this.state = {
         editorState: EditorState.createEmpty(),
-        fontColor: '',
+        textAlign: 'x'
     };
     this.onChange = (editorState) => this.setState({editorState});
   }
@@ -62,8 +62,7 @@ class MyEditor extends React.Component {
   }
 
   _onColorChange(event) {
-     const styleMapColor = 'FONT-COLOR-' + event.target.value.toUpperCase();
-     this.setState({fontColor: event.target.value})
+     const styleMapColor = 'FONT_COLOR_' + event.target.value.toUpperCase();
      this.onChange(RichUtils.toggleInlineStyle(
         this.state.editorState,
         styleMapColor
@@ -136,7 +135,7 @@ class MyEditor extends React.Component {
             customStyleMap={styleMap}
             editorState={this.state.editorState}
             onChange={this.onChange}
-            // textAlignment={this.state.editorState}
+            textAlignment={this.state.textAlign}
           />
         </div>
       </div>
