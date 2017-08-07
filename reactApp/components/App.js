@@ -41,7 +41,7 @@ const styleMap = {
     },
 };
 
-class MyEditor extends React.Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -131,8 +131,4 @@ class MyEditor extends React.Component {
   }
 }
 
-ReactDOM.render((
-    <BrowserRouter>
-        <Login />
-    </BrowserRouter>
-), document.getElementById('root'));
+export default App;
