@@ -46,11 +46,11 @@ class MyEditor extends React.Component {
     this.onChange = (editorState) => this.setState({editorState});
   }
 
-  _onBoldClick() {
-     this.onChange(RichUtils.toggleInlineStyle(
-        this.state.editorState,
-        'BOLD'
-     ));
+  _onFormatClick(style) {
+      this.onChange(RichUtils.toggleInlineStyle(
+         this.state.editorState,
+         style
+      ));
   }
 
   _onFontSizeChange(e) {
@@ -59,35 +59,7 @@ class MyEditor extends React.Component {
     this.onChange(RichUtils.toggleInlineStyle(
         this.state.editorState,
         string
-     ));
-  }
-
-  _onUnderlineClick() {
-     this.onChange(RichUtils.toggleInlineStyle(
-        this.state.editorState,
-        'UNDERLINE'
-     ));
-  }
-
-  _onItalicClick() {
-     this.onChange(RichUtils.toggleInlineStyle(
-        this.state.editorState,
-        'ITALIC'
-     ));
-  }
-
-  _onCodeClick() {
-     this.onChange(RichUtils.toggleInlineStyle(
-        this.state.editorState,
-        'CODE'
-     ));
-  }
-
-  _onStrikeClick() {
-     this.onChange(RichUtils.toggleInlineStyle(
-        this.state.editorState,
-        'STRIKETHROUGH'
-     ));
+    ));
   }
 
   _onColorChange(event) {
@@ -99,26 +71,26 @@ class MyEditor extends React.Component {
      ));
   }
 
-   _onLeftAClick() {
-      this.onChange(RichUtils.toggleInlineStyle(
-          this.textAlignment,
-          'left'
-      ));
-  }
-
-   _onRightAClick() {
-      this.onChange(RichUtils.toggleInlineStyle(
-          this.textAlignment,
-          'right'
-      ));
-  }
-
-   _onCenterAClick() {
-      this.onChange(RichUtils.toggleInlineStyle(
-          this.textAlignment,
-          'center'
-      ));
-  }
+  //  _onLeftAClick() {
+  //     this.onChange(RichUtils.toggleBlockType(
+  //         this.state.editorState,
+  //         'left'
+  //     ));
+  // }
+  //
+  //  _onRightAClick() {
+  //     this.onChange(RichUtils.toggleBlockType(
+  //         this.state.editorState,
+  //         'right'
+  //     ));
+  // }
+  //
+  //  _onCenterAClick() {
+  //     this.onChange(RichUtils.toggleBlockType(
+  //         this.state.editorState,
+  //         'center'
+  //     ));
+  // }
 
   _onBulletList() {
     
@@ -132,6 +104,7 @@ class MyEditor extends React.Component {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
         <h1>Draft.js Editor</h1>
+<<<<<<< HEAD
         <Toolbar 
           handleFontSizeChange={this._onFontSizeChange.bind(this)} 
           bulletList={this._onBulletList.bind(this)}
@@ -143,6 +116,15 @@ class MyEditor extends React.Component {
         <button onClick={this._onCodeClick.bind(this)}>Code</button>
         <button onClick={this._onStrikeClick.bind(this)}>Strikethrough</button>
         <select onChange={(e) => this._onColorChange(e)}>
+=======
+        <Toolbar handleFontSizeChange={this.handleChange.bind(this)}/>
+        <button onClick={() => this._onFormatClick('BOLD')}>Bold</button>
+        <button onClick={() => this._onFormatClick('ITALIC')}>Italic</button>
+        <button onClick={() => this._onFormatClick('UNDERLINE')}>Underline</button>
+        <button onClick={() => this._onFormatClick('CODE')}>Code</button>
+        <button onClick={() => this._onFormatClick('STRIKETHROUGH')}>Strikethrough</button>
+        <select onChange={(event) => this._onColorChange(event)}>
+>>>>>>> a224ca80c3c2f8f0ab3a8d5ea1c3872c3d5a4364
             <option value="red">Red</option>
             <option value="yellow">Yellow</option>
             <option value="blue">Blue</option>
@@ -154,18 +136,14 @@ class MyEditor extends React.Component {
           <Editor
             customStyleMap={styleMap}
             editorState={this.state.editorState}
-            customStyleMap={styleMap}
             onChange={this.onChange}
-            textAlignment='right'
+            // textAlignment={this.state.editorState}
           />
         </div>
       </div>
     );
   }
 }
-
-
-
 
 ReactDOM.render(<MyEditor />,
    document.getElementById('root'));
