@@ -2,7 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 import { Router, Route, Switch } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
-import {Editor, EditorState, RichUtils, Immutable} from 'draft-js';
+import { Editor, EditorState, RichUtils, Immutable } from 'draft-js';
 import Toolbar from './components/Toolbar'
 import Login from './components/Login'
 import Register from './components/Register'
@@ -58,7 +58,7 @@ class MyEditor extends React.Component {
       ));
   }
 
-  handleChange(e) {
+  _onFontSizeChange(e) {
     var string = 'FONT_SIZE_' + e.target.value;
     this.onChange(RichUtils.toggleInlineStyle(
         this.state.editorState,
@@ -99,11 +99,33 @@ class MyEditor extends React.Component {
   //     ));
   // }
 
+  _onBulletList(e) {
+    e.preventDefault();
+    this.onChange(
+        RichUtils.toggleBlockType(
+            this.state.editorState,
+            'unordered-list-item'
+    ));
+  }
+
+  _onNumberList(e) {
+    e.preventDefault();
+    this.onChange(
+        RichUtils.toggleBlockType(
+            this.state.editorState,
+            'ordered-list-item'
+    ));
+  }
+
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
         <h1>Jam Editor</h1>
-        <Toolbar handleFontSizeChange={this.handleChange.bind(this)}/>
+        <Toolbar
+          handleFontSizeChange={this._onFontSizeChange.bind(this)}
+          bulletList={this._onBulletList.bind(this)}
+          numberList={this._onNumberList.bind(this)}
+          />
         <button onClick={() => this._onFormatClick('BOLD')}>Bold</button>
         <button onClick={() => this._onFormatClick('ITALIC')}>Italic</button>
         <button onClick={() => this._onFormatClick('UNDERLINE')}>Underline</button>
@@ -132,7 +154,8 @@ class MyEditor extends React.Component {
 }
 
 ReactDOM.render((
-    <BrowserRouter>
-        <Login />
-    </BrowserRouter>
+    // <BrowserRouter>
+    //     <Login />
+    // </BrowserRouter>
+    <MyEditor />
 ), document.getElementById('root'));
