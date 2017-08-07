@@ -6,6 +6,8 @@ import Immutable from 'immutable';
 import Toolbar from './Toolbar'
 import Login from './Login'
 import Register from './Register'
+import mongoose from 'mongoose';
+import { Users, Documents } from '../../backend/models'
 
 /* This can check if your electron app can communicate with your backend */
 // fetch('http://localhost:3000')
@@ -13,25 +15,6 @@ import Register from './Register'
 // .then(text => console.log(text))
 // .catch(err => {throw err})
 
-class AligningWrapper extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      textAlign: 'left'
-    }
-  }
-
-  render() {
-    return (
-      <div className={this.state.textAlign}>
-        <button onClick={() => this.textAlignLeft()}>Align Left</button>
-        <button onClick={() => this.textAlignCenter()}>Align Center</button>
-        <button onClick={() => this.textAlignRight()}>Align Right</button>
-        {this.props.children}
-      </div>
-    );
-  }
-}
 
 const blockRenderMap = Immutable.Map({
   'rightAlign': {wrapper: (<div className='right'></div>)},
@@ -140,6 +123,11 @@ class EditorApp extends React.Component {
       ));
   }
 
+  // _save() {
+  //   var newDoc = {
+
+  //   }
+  // }
 
   render() {
     return (
