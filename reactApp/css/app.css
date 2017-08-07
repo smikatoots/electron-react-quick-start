@@ -15,3 +15,11 @@ body {
     border: 1px solid grey;
     padding: 6px;
 }
+
+.randoStyling {
+  color: #999;
+  font-family: 'Hoefler Text', Georgia, serif;
+  font-style: italic;
+  text-align: center;
+}
+

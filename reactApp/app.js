@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-import {Editor, EditorState, RichUtils} from 'draft-js';
+import {Editor, EditorState, RichUtils, Immutable} from 'draft-js';
 import Toolbar from './components/Toolbar'
 
 /* This can check if your electron app can communicate with your backend */
@@ -41,6 +41,7 @@ class MyEditor extends React.Component {
     super(props);
     this.state = {
         editorState: EditorState.createEmpty(),
+        textAlign: 'x'
     };
     this.onChange = (editorState) => this.setState({editorState});
   }
@@ -112,7 +113,7 @@ class MyEditor extends React.Component {
             customStyleMap={styleMap}
             editorState={this.state.editorState}
             onChange={this.onChange}
-            // textAlignment={this.state.editorState}
+            textAlignment={this.state.textAlign}
           />
         </div>
       </div>
