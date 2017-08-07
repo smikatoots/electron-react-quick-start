@@ -53,7 +53,7 @@ class MyEditor extends React.Component {
      ));
   }
 
-  handleChange(e) {
+  _onFontSizeChange(e) {
     var string = 'FONT_SIZE_' + e.target.value;
     console.log(string);
     this.onChange(RichUtils.toggleInlineStyle(
@@ -120,11 +120,23 @@ class MyEditor extends React.Component {
       ));
   }
 
+  _onBulletList() {
+    
+  }
+
+  _onNumberList() {
+
+  }
+
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
         <h1>Draft.js Editor</h1>
-        <Toolbar handleFontSizeChange={this.handleChange.bind(this)}/>
+        <Toolbar 
+          handleFontSizeChange={this._onFontSizeChange.bind(this)} 
+          bulletList={this._onBulletList.bind(this)}
+          numberList={this._onNumberList.bind(this)} 
+          />
         <button onClick={this._onBoldClick.bind(this)}>Bold</button>
         <button onClick={this._onItalicClick.bind(this)}>Italic</button>
         <button onClick={this._onUnderlineClick.bind(this)}>Underline</button>
