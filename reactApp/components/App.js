@@ -2,7 +2,8 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 import { Router, Route, Switch } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
-import { Editor, EditorState, RichUtils, Immutable } from 'draft-js';
+import { Editor, EditorState, RichUtils, DefaultDraftBlockRenderMap } from 'draft-js';
+import Immutable from 'immutable';
 import Toolbar from './Toolbar'
 import Login from './Login'
 import Register from './Register'
@@ -20,23 +21,6 @@ import Register from './Register'
 //       textAlign: 'left'
 //     }
 //   }
-//   textAlignCenter() {
-//     this.setState({
-//         textAlign: 'center'
-//     })
-//   }
-
-//   textAlignLeft() {
-//     this.setState({
-//         textAlign: 'left'
-//     })
-//   }
-
-//   textAlignRight() {
-//     this.setState({
-//         textAlign: 'right'
-//     })
-//   }
 
 //   render() {
 //     return (
@@ -50,13 +34,13 @@ import Register from './Register'
 //   }
 // }
 
-// const blockRenderMap = Immutable.Map({
-//   'AligningWrapper': {
-//     wrapper: AligningWrapper
-//   }
-// });
+const blockRenderMap = Immutable.Map({
+  'rightAlign': {wrapper: (<div className='right'></div>)},
+  'leftAlign': {wrapper: (<div className='left'></div>)},
+  'centerAlign': {wrapper: (<div className='center'></div>)}
+});
 
-// const extendedBlockRenderMap = Draft.DefaultDraftBlockRenderMap.merge(blockRenderMap);
+const extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(blockRenderMap);
 
 const styleMap = {
     'FONT_SIZE_8': {
@@ -122,26 +106,26 @@ class EditorApp extends React.Component {
   //    models.Documents.findById()
   // }
 
-  //  _onLeftAClick() {
-  //     this.onChange(RichUtils.toggleBlockType(
-  //         this.state.editorState,
-  //         'left'
-  //     ));
-  // }
-  //
-  //  _onRightAClick() {
-  //     this.onChange(RichUtils.toggleBlockType(
-  //         this.state.editorState,
-  //         'right'
-  //     ));
-  // }
-  //
-  //  _onCenterAClick() {
-  //     this.onChange(RichUtils.toggleBlockType(
-  //         this.state.editorState,
-  //         'center'
-  //     ));
-  // }
+   _onLeftAClick() {
+      this.onChange(RichUtils.toggleBlockType(
+          this.state.editorState,
+          'leftAlign'
+      ));
+  }
+  
+   _onRightAClick() {
+      this.onChange(RichUtils.toggleBlockType(
+          this.state.editorState,
+          'rightAlign'
+      ));
+  }
+  
+   _onCenterAClick() {
+      this.onChange(RichUtils.toggleBlockType(
+          this.state.editorState,
+          'centerAlign'
+      ));
+  }
 
   _onBulletList(e) {
     e.preventDefault();
@@ -180,14 +164,15 @@ class EditorApp extends React.Component {
             <option value="yellow">Yellow</option>
             <option value="blue">Blue</option>
         </select>
-        {/* <button onClick={this._onLeftAClick.bind(this)}>Align Left</button>
+         <button onClick={this._onLeftAClick.bind(this)}>Align Left</button>
         <button onClick={this._onCenterAClick.bind(this)}>Align Center</button>
-        <button onClick={this._onRightAClick.bind(this)}>Align Right</button> */}
+        <button onClick={this._onRightAClick.bind(this)}>Align Right</button> 
         <div className='editor' style={{border: '1px solid grey', padding: '6px'}}>
           <Editor
             customStyleMap={styleMap}
             editorState={this.state.editorState}
             onChange={this.onChange}
+            blockRenderMap={extendedBlockRenderMap}
           />
         </div>
         {/* <button onClick={() => this.saveChanges()}>SAVE</button> */}
