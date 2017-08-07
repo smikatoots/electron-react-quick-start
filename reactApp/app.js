@@ -55,7 +55,6 @@ class MyEditor extends React.Component {
 
   _onFontSizeChange(e) {
     var string = 'FONT_SIZE_' + e.target.value;
-    console.log(string);
     this.onChange(RichUtils.toggleInlineStyle(
         this.state.editorState,
         string
@@ -92,39 +91,39 @@ class MyEditor extends React.Component {
   //     ));
   // }
 
-  _onBulletList() {
-    
+  _onBulletList(e) {
+    e.preventDefault();
+    this.onChange(
+        RichUtils.toggleBlockType(
+            this.state.editorState,
+            'unordered-list-item'
+    ));
   }
 
-  _onNumberList() {
-
+  _onNumberList(e) {
+    e.preventDefault();
+    this.onChange(
+        RichUtils.toggleBlockType(
+            this.state.editorState,
+            'ordered-list-item'
+    ));
   }
 
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
         <h1>Draft.js Editor</h1>
-<<<<<<< HEAD
         <Toolbar 
           handleFontSizeChange={this._onFontSizeChange.bind(this)} 
           bulletList={this._onBulletList.bind(this)}
           numberList={this._onNumberList.bind(this)} 
           />
-        <button onClick={this._onBoldClick.bind(this)}>Bold</button>
-        <button onClick={this._onItalicClick.bind(this)}>Italic</button>
-        <button onClick={this._onUnderlineClick.bind(this)}>Underline</button>
-        <button onClick={this._onCodeClick.bind(this)}>Code</button>
-        <button onClick={this._onStrikeClick.bind(this)}>Strikethrough</button>
-        <select onChange={(e) => this._onColorChange(e)}>
-=======
-        <Toolbar handleFontSizeChange={this.handleChange.bind(this)}/>
         <button onClick={() => this._onFormatClick('BOLD')}>Bold</button>
         <button onClick={() => this._onFormatClick('ITALIC')}>Italic</button>
         <button onClick={() => this._onFormatClick('UNDERLINE')}>Underline</button>
         <button onClick={() => this._onFormatClick('CODE')}>Code</button>
         <button onClick={() => this._onFormatClick('STRIKETHROUGH')}>Strikethrough</button>
         <select onChange={(event) => this._onColorChange(event)}>
->>>>>>> a224ca80c3c2f8f0ab3a8d5ea1c3872c3d5a4364
             <option value="red">Red</option>
             <option value="yellow">Yellow</option>
             <option value="blue">Blue</option>
