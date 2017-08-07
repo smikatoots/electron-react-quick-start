@@ -12,6 +12,12 @@ var UsersSchema = schema({
     },
 })
 var DocumentsSchema = schema({
+    title: {
+        type: String
+    },
+    content: {
+        type: String
+    },
 	author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users'
@@ -22,9 +28,10 @@ var DocumentsSchema = schema({
             ref: 'Users'
         },
     ],
-    password: {
-        type: String
-    }
+    // password: {
+    //     type: String
+    // }
+    // PASSWORD SAME AS ID?
 })
 
 var Users = mongoose.model('Users', UsersSchema);

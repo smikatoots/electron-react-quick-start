@@ -10,7 +10,7 @@ class Toolbar extends React.Component {
     return (
       <div id='toolbarContent'>
       	<form onSubmit={() => {return false;}}>
-          <label>
+          <label style={{fontSize: 12}}>
             Font Size:{' '}
             <select onChange={this.props.handleFontSizeChange}>
                 <option value="8">8</option>
@@ -19,6 +19,8 @@ class Toolbar extends React.Component {
                 <option value="24">24</option>
             </select>
           </label>
+          <button onClick={this.props.bulletList.bind(this)}>Bullet</button>
+          <button onClick={this.props.numberList.bind(this)}>Number</button>
         </form>
       </div>
     );

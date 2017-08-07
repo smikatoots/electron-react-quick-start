@@ -2,7 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 import { Router, Route, Switch } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
-import { Editor, EditorState, RichUtils, Immutable } from 'draft-js';
+import {Editor, EditorState, RichUtils, Immutable} from 'draft-js';
 import Toolbar from './components/Toolbar'
 import Login from './components/Login'
 import Register from './components/Register'
@@ -13,51 +13,6 @@ import Register from './components/Register'
 // .then(resp => resp.text())
 // .then(text => console.log(text))
 // .catch(err => {throw err})
-
-class AligningWrapper extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      textAlign: 'left'
-    }
-  }
-  textAlignCenter() {
-    this.setState({
-        textAlign: 'center'
-    })
-  }
-
-  textAlignLeft() {
-    this.setState({
-        textAlign: 'left'
-    })
-  }
-
-  textAlignRight() {
-    this.setState({
-        textAlign: 'right'
-    })
-  }
-
-  render() {
-    return (
-      <div className={this.state.textAlign}>
-        <button onClick={() => this.textAlignLeft()}>Align Left</button>
-        <button onClick={() => this.textAlignCenter()}>Align Center</button>
-        <button onClick={() => this.textAlignRight()}>Align Right</button>
-        {this.props.children}
-      </div>
-    );
-  }
-}
-
-const blockRenderMap = Immutable.Map({
-  'AligningWrapper': {
-    wrapper: AligningWrapper
-  }
-});
-
-const extendedBlockRenderMap = Draft.DefaultDraftBlockRenderMap.merge(blockRenderMap);
 
 const styleMap = {
     'FONT_SIZE_8': {
@@ -86,7 +41,7 @@ const styleMap = {
     },
 };
 
-class MyEditor extends React.Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -103,7 +58,7 @@ class MyEditor extends React.Component {
       ));
   }
 
-  _onFontSizeChange(e) {
+  handleChange(e) {
     var string = 'FONT_SIZE_' + e.target.value;
     this.onChange(RichUtils.toggleInlineStyle(
         this.state.editorState,
@@ -144,33 +99,11 @@ class MyEditor extends React.Component {
   //     ));
   // }
 
-  _onBulletList(e) {
-    e.preventDefault();
-    this.onChange(
-        RichUtils.toggleBlockType(
-            this.state.editorState,
-            'unordered-list-item'
-    ));
-  }
-
-  _onNumberList(e) {
-    e.preventDefault();
-    this.onChange(
-        RichUtils.toggleBlockType(
-            this.state.editorState,
-            'ordered-list-item'
-    ));
-  }
-
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
         <h1>Jam Editor</h1>
-        <Toolbar
-          handleFontSizeChange={this._onFontSizeChange.bind(this)}
-          bulletList={this._onBulletList.bind(this)}
-          numberList={this._onNumberList.bind(this)}
-          />
+        <Toolbar handleFontSizeChange={this.handleChange.bind(this)}/>
         <button onClick={() => this._onFormatClick('BOLD')}>Bold</button>
         <button onClick={() => this._onFormatClick('ITALIC')}>Italic</button>
         <button onClick={() => this._onFormatClick('UNDERLINE')}>Underline</button>
@@ -189,7 +122,7 @@ class MyEditor extends React.Component {
             customStyleMap={styleMap}
             editorState={this.state.editorState}
             onChange={this.onChange}
-            blockRenderMap={extendedBlockRenderMap}
+            textAlignment={this.state.textAlign}
           />
         </div>
         {/* <button onClick={() => this.saveChanges()}>SAVE</button> */}
@@ -198,9 +131,4 @@ class MyEditor extends React.Component {
   }
 }
 
-ReactDOM.render((
-    // <BrowserRouter>
-    //     <Login />
-    // </BrowserRouter>
-    <MyEditor />
-), document.getElementById('root'));
+export default App;
