@@ -40,7 +40,7 @@ class Login extends React.Component {
         this.setState({
           redirect: true
         });
-        localStorage.verified = true;
+        localStorage.user = res.userId;
       }
     }).catch(err => err);
   }

@@ -53,9 +53,10 @@ class DocumentPortal extends React.Component {
         headers: {
             'Content-Type': 'application/json'
         },
-        // body: JSON.stringify({
-        //     title,
-        // })
+        // credentials: 'include'
+        body: JSON.stringify({
+            userId: localStorage.user,
+        })
       })
       .then(function(response) {
           console.log(response);
