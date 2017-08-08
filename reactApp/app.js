@@ -29,10 +29,8 @@ class Main extends React.Component {
         <HashRouter>
             <Switch>
                 <Route exact path='/' component={Login}/>
-                <Route onEnter={this.requireLogin.bind(this)}>
-                  <Route exact path='/docs' component={DocumentPortal}/>
-                  <Route exact path='/editor' component={EditorApp}/>
-                </Route>
+                <Route exact path='/docs' component={DocumentPortal} onEnter={this.requireLogin.bind(this)}/>
+                <Route exact path='/editor' component={EditorApp} onEnter={this.requireLogin.bind(this)}/>
                 {/* both /roster and /roster/:number begin with /roster */}
                 <Route path='/register' component={Register}/>
             </Switch>
