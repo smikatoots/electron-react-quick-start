@@ -118,6 +118,17 @@ app.post('/new', function(req, res) {
   })
 })
 
+// app.post('/allDocs', function(req, res) {
+//   User.findById(req.user)
+//   .populate('documents')
+//   .exec((user) => {
+//       return user
+//   })
+//   .then((user) => {
+//
+//   })
+// })
+
 app.post('/show/:id', function(req, res) {
   var id = req.params.id
   Document.findById(id, function(err, doc) {
@@ -142,6 +153,7 @@ app.post('/show/:id', function(req, res) {
     }
   })
 })
+
 app.post('/save', function(req, res) {
   console.log('hey', req.body)
   var newDoc = new Document({
