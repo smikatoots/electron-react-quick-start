@@ -6,6 +6,8 @@ import Immutable from 'immutable';
 import Toolbar from './Toolbar'
 import Login from './Login'
 import Register from './Register'
+import mongoose from 'mongoose';
+import { Users, Documents } from '../../backend/models'
 
 /* This can check if your electron app can communicate with your backend */
 // fetch('http://localhost:3000')
@@ -13,6 +15,10 @@ import Register from './Register'
 // .then(text => console.log(text))
 // .catch(err => {throw err})
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4a7bc7825ac9169d152d5f09102539e28e5d3c5c
 const blockRenderMap = Immutable.Map({
   'rightAlign': {wrapper: (<div className='right'></div>)},
   'leftAlign': {wrapper: (<div className='left'></div>)},
