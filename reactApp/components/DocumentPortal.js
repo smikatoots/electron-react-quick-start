@@ -46,7 +46,8 @@ class DocumentPortal extends React.Component {
       this.setState({sharedDocumentID: event.target.value})
   }
 
-  handleShowingDocuments() {
+  componentWillMount() {
+      console.log("HELLO");
       fetch('http://localhost:3000/allDocs', {
         method: 'POST',
         headers: {
@@ -57,11 +58,12 @@ class DocumentPortal extends React.Component {
         // })
       })
       .then(function(response) {
-        return response.json()
+          console.log(response);
+        // return response.json()
       })
-      .then(function(body) {
-        console.log('Body of data: ', body)
-      })
+    //   .then(function(body) {
+    //     console.log('Body of data: ', body)
+    //   })
       .catch((err) => {
         console.log('Error!', err)
       })
@@ -77,7 +79,6 @@ class DocumentPortal extends React.Component {
               value={this.state.newDocument}
               placeholder="New Document Title"/><br/>
           <button type="submit" onClick={() => this.handleNewDocumentSubmit()}>Create Document</button><br/><br/>
-
           <input
               type="text"
               onChange={(event) => this.handleSharedDocumentIDChange(event)}

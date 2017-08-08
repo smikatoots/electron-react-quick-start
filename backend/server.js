@@ -7,34 +7,38 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local');
 var mongoose = require('mongoose');
 var ReactDOMServer = require('react-dom/server');
-
 var app = express();
 
 mongoose.Promise = global.Promise
 var Models = require('./models')
 var MongoStore = require('connect-mongo')(session)
 var app = express();
-var Document = Models.Document
-var User = Models.User
-
+var Document = Models.Document;
+var User = Models.User;
 var connect = process.env.MONGODB_URI
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
   secret: 'keyboard cat',
   store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
 mongoose.connect(connect);
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 passport.serializeUser((user, done) => {
+    console.log(user._id);
   done(null, user._id);
 });
 
 passport.deserializeUser((id, done) => {
+    console.log('deserialize id', id);
   User.findById(id, (err, user) => {
+      console.log('user', user);
     done(err, user);
   });
 });
@@ -55,9 +59,6 @@ passport.use(new LocalStrategy(function(username, password, done){
     return done(null, user);
   });
 }));
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.post('/register', function(req, res) {
 	console.log('registering')
@@ -100,21 +101,34 @@ app.post('/new', function(req, res) {
     }
     else {
       console.log('Success! Document saved', doc)
+
       res.json(doc)
     }
   })
 })
 
-// app.post('/allDocs', function(req, res) {
-//   User.findById(req.user)
-//   .populate('documents')
-//   .exec((user) => {
-//       return user
-//   })
-//   .then((user) => {
-//
-//   })
-// })
+app.post('/allDocs', function(req, res) {
+    // console.log('route user', req.user);
+    var tempUser = '598a017bfef5f932783d5bf0'
+    console.log(tempUser);
+    // Document.find((err, docs) => {
+    //     console.log('DOCUMENTS', docs);
+    // })
+    User.findById(tempUser, (err, user) => {
+        console.log(user);
+    })
+  // User.find((user) => {
+  //     console.log('USER', user);
+  // })
+  // .populate('documents')
+  // .exec((user) => {
+  //     console.log("USERS", user);
+  //     return user
+  // })
+  // .then((user) => {
+  //
+  // })
+})
 
 app.post('/show/:id', function(req, res) {
   var id = req.params.id
@@ -185,15 +199,15 @@ app.post('/save', function(req, res) {
   //               }
   //           }
   //           else {
-              var collabArr = doc.collaborators.slice()
-              collabArr.push(user._id)
-              Document.update({_id: id}, {
-                content: this.editorState,
-                collaborators: collabArr
-              }), function(err, affected, resp) {
-                console.log('Document updated and saved! Collaboratoradded', resp)
-                }
-              }
+            //   var collabArr = doc.collaborators.slice()
+            //   collabArr.push(user._id)
+            //   Document.update({_id: id}, {
+            //     content: this.editorState,
+            //     collaborators: collabArr
+            //   }), function(err, affected, resp) {
+            //     console.log('Document updated and saved! Collaboratoradded', resp)
+            //     }
+            //   }
   //           }
   //         })
   //       }
