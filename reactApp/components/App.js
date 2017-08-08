@@ -122,9 +122,17 @@ class EditorApp extends React.Component {
   }
 
   _save(id) {
-      axios('/:'+id+'/save')
-      .then((data) => {
-        console.log(data)
+      fetch('/:'+id+'/save', {
+        method: 'POST', 
+        data: {
+          content: this.state.editorState
+        }
+      })
+      .then(function(response) {
+        return response.json()
+      })
+      .then(function(body) {
+        console.log(body)
       })
     }
   
