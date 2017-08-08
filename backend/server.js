@@ -136,13 +136,11 @@ app.post('/new', function(req, res) {
 
 app.post('/allDocs', function(req, res) {
     var userId = req.body.userId
-    // User.findById(tempUser, (err, user) => {
-    //     console.log(user);
-    // })
-    console.log(userId);
+    console.log('userId', req.body.userId);
     User.findById(userId)
-    // .populate('documents')
+    .populate('documents')
     .exec((err, userFound) => {
+        console.log(userFound);
         console.log(userFound.documents);
     })
   // User.find((user) => {

@@ -55,7 +55,7 @@ class DocumentPortal extends React.Component {
         },
         // credentials: 'include'
         body: JSON.stringify({
-            userId: localStorage.user,
+            userId: localStorage.getItem('userId')
         })
       })
       .then(function(response) {
