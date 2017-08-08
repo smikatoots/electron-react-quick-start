@@ -60,6 +60,19 @@ app.get('/', function (req, res) {
   res.send('Hello World!')
 })
 
+
+app.post('/show/:id', function(req, res) {
+  var id = req.params.id
+  Document.findById(id, function(err, doc) {
+    if (err) {
+      console.log('error in finding document', id)
+    }
+    else {
+      res.json(doc)
+    }
+  })
+})
+
 app.post('/save', function(req, res) {
   console.log('hey', req.body)
   var newDoc = new Document({
