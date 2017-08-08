@@ -10,6 +10,12 @@ var UsersSchema = schema({
     password: {
         type: String
     },
+    documents: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Documents'
+        },
+    ]
 })
 var DocumentsSchema = schema({
     title: {
@@ -22,24 +28,24 @@ var DocumentsSchema = schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users'
 	},
-    collaborators: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Users'
-        },
-    ],
+    // collaborators: [
+    //     {
+    //         type: mongoose.Schema.Types.ObjectId,
+    //         ref: 'Users'
+    //     },
+    // ],
     // password: {
     //     type: String
     // }
     // PASSWORD SAME AS ID?
 })
 
-var Users = mongoose.model('Users', UsersSchema);
+var User = mongoose.model('User', UsersSchema);
 
-var Documents = mongoose.model('Documents', DocumentsSchema);
+var Document = mongoose.model('Document', DocumentsSchema);
 
 
 module.exports = {
-    Users: Users,
-    Documents: Documents
+    User: User,
+    Document: Document
 }
