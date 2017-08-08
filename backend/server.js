@@ -1,13 +1,14 @@
-import express from 'express';
-import path  from 'path';
-import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
-import session from 'express-session';
-import passport from 'passport';
-import LocalStrategy from 'passport-local';
-import mongoose from 'mongoose';
-import Users from './models'
-import Documents from './models'
+var express = require('express');
+var path  = require('path');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var session = require('express-session');
+var passport = require('passport');
+var LocalStrategy = require('passport-local');
+var mongoose = require('mongoose');
+var Users = require('./models')
+var Documents = require('./models')
+var MongoStore = require('connect-mongo')(session)
 var app = express();
 
 app.use(bodyParser.json());
@@ -54,7 +55,8 @@ app.get('/', function (req, res) {
   res.send('Hello World!')
 })
 
-app.post('/:id/save', function(req, res) {
+app.post('/save', function(req, res) {
+  console.log('hey')
   var id = req.params.id
   Document.findById(id, function(err, doc) {
       if (err) {

@@ -121,18 +121,22 @@ class EditorApp extends React.Component {
       ));
   }
 
-  _save(id) {
-      fetch('/:'+id+'/save', {
+  _save() {
+      fetch('http://localhost:3000/save', {
         method: 'POST', 
         data: {
           content: this.state.editorState
         }
       })
       .then(function(response) {
+        console.log('response is this:', response)
         return response.json()
       })
       .then(function(body) {
-        console.log(body)
+        console.log('body is right here: ', body)
+      })
+      .catch((err) => {
+        console.log('error is err', err)
       })
     }
   
