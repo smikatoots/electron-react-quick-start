@@ -70,6 +70,13 @@ app.post('/register', function(req, res) {
 	}
 })
 
+app.post('/verify', function(req, res) {
+	if (req.user) {
+		res.json({success: true})
+	}
+	else res.json({success: false})
+})
+
 app.post('/login', passport.authenticate('local'));
 
 app.use('/login', function(req, res){
@@ -77,13 +84,6 @@ app.use('/login', function(req, res){
 	if (req.user) res.json({success: true});
 	else res.json({success: false});
 })
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
 
 app.listen(3000, function () {
   console.log('Backend server for Electron App running on port 3000!')

@@ -40,12 +40,13 @@ class Login extends React.Component {
         this.setState({
           redirect: true
         });
+        localStorage.verified = true;
       }
     }).catch(err => err);
   }
 
   render() {
-    if (this.state.redirect) return <Redirect to='/' />;
+    if (this.state.redirect) return <Redirect to='/app' />;
     return (
       <div id='login'>
           <h1>Login</h1> <br/>

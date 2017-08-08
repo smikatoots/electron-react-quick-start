@@ -2,9 +2,10 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 import { Router, Route, Switch, HashRouter } from 'react-router-dom';
 import { Editor, EditorState, RichUtils, Immutable } from 'draft-js';
-import Login from './components/Login'
-import Register from './components/Register'
-import EditorApp from './components/App'
+import { Redirect } from 'react-router'
+import Login from './components/Login';
+import Register from './components/Register';
+import EditorApp from './components/App';
 
 /* This can check if your electron app can communicate with your backend */
 // fetch('http://localhost:3000')
@@ -17,12 +18,19 @@ class Main extends React.Component {
     super(props);
   }
 
+  requireLogin() {
+    console.log("here", localStorage.verified)
+    if (!localStorage.verified) return (<Redirect to='/' />);
+  }
+
   render() {
     return (
         <HashRouter>
             <Switch>
-                <Route exact path='/' component={EditorApp}/>
-                <Route exact path='/login' component={Login}/>
+                <Route exact path='/' component={Login}/>
+                <Route onEnter={this.requireLogin.bind(this)}>
+                  <Route exact path='/app' component={EditorApp}/>
+                </Route>
                 {/* both /roster and /roster/:number begin with /roster */}
                 <Route path='/register' component={Register}/>
             </Switch>

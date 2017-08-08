@@ -44,7 +44,7 @@ class Register extends React.Component {
   }
 
   render() {
-    if (this.state.redirect) return <Redirect to='/login' />;
+    if (this.state.redirect) return <Redirect to='/' />;
     return (
         <div id='register'>
             <h1>Register</h1><br/>
