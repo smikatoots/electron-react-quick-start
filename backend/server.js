@@ -12,15 +12,17 @@ var app = express();
 var Document = Models.Documents
 var User = Models.Users
 
-
+var connect = process.env.MONGODB_URI
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   secret: 'keyboard cat',
   store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
+mongoose.connect(connect);
+
 
 passport.serializeUser((user, done) => {
   done(null, user._id);
@@ -58,13 +60,13 @@ app.get('/', function (req, res) {
 })
 
 app.post('/save', function(req, res) {
-  console.log('hey')
+  console.log('hey', req.body)
   var newDoc = new Document({
     title: 'yo',
-    content: req.body.content,
+    content: 'hey this is content',
     collaborators: []
   })
-  console.log('yo')
+  console.log('yo', newDoc)
   newDoc.save(function(err, doc) {
     if (err) {
       console.log('error in saving', err)
