@@ -123,12 +123,47 @@ class EditorApp extends React.Component {
       ));
   }
 
-  // _save() {
-  //   var newDoc = {
-
-  //   }
-  // }
-
+  _save(id) {
+    Document.findById(id, function(err, doc) {
+      if (err) {
+        console.log('error in finding doc to save', err)
+      }
+      else {
+        Users.find({username: req.user}, function(err, user) {
+          if (err) {
+            console.log('error finding user', err)
+          }
+          else {
+            if (doc.author === user._id) {
+              Document.update({_id: id}, {
+                content: this.editorState
+              }), function(err, affected, resp) {
+                console.log('Document updated and saved!', resp)
+                }
+            }
+            else if (doc.collaborators.includes(user._id)) {
+              Document.update({_id: id}, {
+                content: this.editorState
+              }), function(err, affected, resp) {
+                console.log('Document updated and saved!', resp)
+                }
+            }
+            else {
+              var collabArr = doc.collaborators.slice()
+              collabArr.push(user._id)
+              Document.update({_id: id}, {
+                content: this.editorState,
+                collaborators: collabArr
+              }), function(err, affected, resp) {
+                console.log('Document updated and saved! Collaboratoradded', resp)
+                }
+              }
+            }
+          })
+        }
+      })
+    }
+  
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
