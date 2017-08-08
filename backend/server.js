@@ -63,13 +63,26 @@ passport.use(new LocalStrategy(function(username, password, done){
 app.post('/register', function(req, res) {
 	console.log('registering')
 	if (req.body.username && req.body.password) {
-		new User({
-			username: req.body.username,
-			password: req.body.password
-		}).save(function(err, user) {
-			if (err) console.log("Error", err);
-			else res.json({success: true});
-		});
+		User.find({ username: req.body.username }, function(err, user){
+			if (err) console.log(err);
+			else if (user) {
+				console.log('Username taken');
+				res.json({success: false});
+			}
+			else {
+				new User({
+					username: req.body.username,
+					password: req.body.password
+				}).save(function(err, user) {
+					if (err) console.log("Error", err);
+					else res.json({success: true});
+				});
+			}
+		})
+	}
+	else {
+		console.log('Missing username or password');
+		res.json({success: false});
 	}
 })
 
@@ -199,6 +212,7 @@ app.post('/save', function(req, res) {
   //               }
   //           }
   //           else {
+<<<<<<< HEAD
             //   var collabArr = doc.collaborators.slice()
             //   collabArr.push(user._id)
             //   Document.update({_id: id}, {
@@ -208,6 +222,17 @@ app.post('/save', function(req, res) {
             //     console.log('Document updated and saved! Collaboratoradded', resp)
             //     }
             //   }
+=======
+              // var collabArr = doc.collaborators.slice()
+              // collabArr.push(user._id)
+              // Document.update({_id: id}, {
+              //   content: this.editorState,
+              //   collaborators: collabArr
+              // }), function(err, affected, resp) {
+              //   console.log('Document updated and saved! Collaboratoradded', resp)
+              //   }
+              // }
+>>>>>>> c7885e2c33f40209c4e8c9e9ce3968fbe814b64a
   //           }
   //         })
   //       }
