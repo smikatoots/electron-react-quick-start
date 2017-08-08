@@ -148,7 +148,7 @@ class EditorApp extends React.Component {
         <Toolbar
           handleFontSizeChange={this._onFontSizeChange.bind(this)}
           handleFormatClick={(style, event) => this._onFormatClick(style, event)}
-          handleColorChange={() => this._onColorChange()}
+          handleColorChange={(e) => this._onColorChange(e)}
           bulletList={this._onBulletList.bind(this)}
           numberList={this._onNumberList.bind(this)}
           handleLeftAClick={() => this._onLeftAClick()}

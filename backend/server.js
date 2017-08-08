@@ -1,22 +1,31 @@
-import express from 'express';
-import path  from 'path';
-import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
-import session from 'express-session';
-import passport from 'passport';
-import LocalStrategy from 'passport-local';
-import mongoose from 'mongoose';
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var session = require('express-session');
+var passport = require('passport');
+var LocalStrategy = require('passport-local');
+var mongoose = require('mongoose');
+
+var ReactDOMServer = require('react-dom/server');
+
+var User = require('./models').User;
+var Document = require('./models').Document;
 
 var app = express();
+app.use(session({ secret: 'keyboard cat'}));
+
+var db = process.env.MONGODB_URI;
+mongoose.connect(db);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({
-  secret: 'keyboard cat',
-  store: new MongoStore({mongooseConnection: mongoose.connection})
-}));
+
+// app.get('/', (request, response) => {
+//     response.sendFile(__dirname + '/public/index.html'); // For React/Redux
+// });
 
 passport.serializeUser((user, done) => {
   done(null, user._id);
@@ -48,11 +57,36 @@ passport.use(new LocalStrategy(function(username, password, done){
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Example route
-app.get('/', function (req, res) {
-  res.send('Hello World!')
+app.post('/register', function(req, res) {
+	console.log('registering')
+	if (req.body.username && req.body.password) {
+		new User({
+			username: req.body.username,
+			password: req.body.password
+		}).save(function(err, user) {
+			if (err) console.log("Error", err);
+			else res.json({success: true});
+		});
+	}
 })
+
+app.post('/login', passport.authenticate('local'));
+
+app.use('/login', function(req, res){
+	console.log("req.user", req.user);
+	if (req.user) res.json({success: true});
+	else res.json({success: false});
+})
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
 
 app.listen(3000, function () {
   console.log('Backend server for Electron App running on port 3000!')
 })
+
+module.exports = app;
