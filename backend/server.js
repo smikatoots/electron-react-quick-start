@@ -62,13 +62,26 @@ app.use(passport.session());
 app.post('/register', function(req, res) {
 	console.log('registering')
 	if (req.body.username && req.body.password) {
-		new User({
-			username: req.body.username,
-			password: req.body.password
-		}).save(function(err, user) {
-			if (err) console.log("Error", err);
-			else res.json({success: true});
-		});
+		User.find({ username: req.body.username }, function(err, user){
+			if (err) console.log(err);
+			else if (user) {
+				console.log('Username taken');
+				res.json({success: false});
+			}
+			else {
+				new User({
+					username: req.body.username,
+					password: req.body.password
+				}).save(function(err, user) {
+					if (err) console.log("Error", err);
+					else res.json({success: true});
+				});
+			}
+		})
+	}
+	else {
+		console.log('Missing username or password');
+		res.json({success: false});
 	}
 })
 
