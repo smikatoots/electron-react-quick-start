@@ -141,6 +141,7 @@ class EditorApp extends React.Component {
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
         <h1>Name of Document</h1>
         <p id="jam-title">Jam Editor</p>
+        <button onClick={() => this._save()}>Save</button>
         <Toolbar
           handleFontSizeChange={this._onFontSizeChange.bind(this)}
           handleFormatClick={(style) => this._onFormatClick(style)}
