@@ -64,7 +64,7 @@ app.post('/save', function(req, res) {
   console.log('hey', req.body)
   var newDoc = new Document({
     title: 'yo',
-    content: 'hey this is content',
+    content: req.body.content,
     collaborators: []
   })
   console.log('yo', newDoc)
