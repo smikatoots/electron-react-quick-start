@@ -15,7 +15,10 @@ import { Users, Documents } from '../../backend/models'
 // .then(text => console.log(text))
 // .catch(err => {throw err})
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> 4a7bc7825ac9169d152d5f09102539e28e5d3c5c
 const blockRenderMap = Immutable.Map({
   'rightAlign': {wrapper: (<div className='right'></div>)},
   'leftAlign': {wrapper: (<div className='left'></div>)},
@@ -56,7 +59,6 @@ class EditorApp extends React.Component {
     super(props);
     this.state = {
         editorState: EditorState.createEmpty(),
-        textAlign: 'x'
     };
     this.onChange = (editorState) => this.setState({editorState});
   }
@@ -123,6 +125,7 @@ class EditorApp extends React.Component {
       ));
   }
 
+<<<<<<< HEAD
   _save(id) {
     Document.findById(id, function(err, doc) {
       if (err) {
@@ -164,13 +167,16 @@ class EditorApp extends React.Component {
       })
     }
   
+=======
+>>>>>>> e5112f5979c62e40caf1bd10299e56f5282d991b
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
-        <h1>Jam Editor</h1>
+        <h1>Name of Document</h1>
+        <p id="jam-title">Jam Editor</p>
         <Toolbar
           handleFontSizeChange={this._onFontSizeChange.bind(this)}
-          handleFormatClick={(style, event) => this._onFormatClick(style, event)}
+          handleFormatClick={(style) => this._onFormatClick(style)}
           handleColorChange={() => this._onColorChange()}
           bulletList={this._onBulletList.bind(this)}
           numberList={this._onNumberList.bind(this)}
@@ -178,6 +184,7 @@ class EditorApp extends React.Component {
           handleCenterAClick={() => this._onCenterAClick()}
           handleRightAClick={() => this._onRightAClick()}
           />
+
         <div className='editor' style={{border: '1px solid grey', padding: '6px'}}>
           <Editor
             customStyleMap={styleMap}

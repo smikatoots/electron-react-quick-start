@@ -1,10 +1,11 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 import { Router, Route, Switch, HashRouter } from 'react-router-dom';
-import { Editor, EditorState, RichUtils, Immutable } from 'draft-js';
 import Login from './components/Login'
 import Register from './components/Register'
 import EditorApp from './components/App'
+import DocumentPortal from './components/DocumentPortal'
+
 
 /* This can check if your electron app can communicate with your backend */
 // fetch('http://localhost:3000')
@@ -22,6 +23,7 @@ class Main extends React.Component {
         <HashRouter>
             <Switch>
                 <Route exact path='/' component={EditorApp}/>
+                <Route exact path='/editor' component={EditorApp}/>
                 <Route exact path='/login' component={Login}/>
                 {/* both /roster and /roster/:number begin with /roster */}
                 <Route path='/register' component={Register}/>
