@@ -13,26 +13,6 @@ import Register from './Register'
 // .then(text => console.log(text))
 // .catch(err => {throw err})
 
-class AligningWrapper extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      textAlign: 'left'
-    }
-  }
-
-  render() {
-    return (
-      <div className={this.state.textAlign}>
-        <button onClick={() => this.textAlignLeft()}>Align Left</button>
-        <button onClick={() => this.textAlignCenter()}>Align Center</button>
-        <button onClick={() => this.textAlignRight()}>Align Right</button>
-        {this.props.children}
-      </div>
-    );
-  }
-}
-
 const blockRenderMap = Immutable.Map({
   'rightAlign': {wrapper: (<div className='right'></div>)},
   'leftAlign': {wrapper: (<div className='left'></div>)},
@@ -73,7 +53,6 @@ class EditorApp extends React.Component {
     super(props);
     this.state = {
         editorState: EditorState.createEmpty(),
-        textAlign: 'x'
     };
     this.onChange = (editorState) => this.setState({editorState});
   }
@@ -140,14 +119,14 @@ class EditorApp extends React.Component {
       ));
   }
 
-
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
-        <h1>Jam Editor</h1>
+        <h1>Name of Document</h1>
+        <p id="jam-title">Jam Editor</p>
         <Toolbar
           handleFontSizeChange={this._onFontSizeChange.bind(this)}
-          handleFormatClick={(style, event) => this._onFormatClick(style, event)}
+          handleFormatClick={(style) => this._onFormatClick(style)}
           handleColorChange={() => this._onColorChange()}
           bulletList={this._onBulletList.bind(this)}
           numberList={this._onNumberList.bind(this)}
@@ -155,6 +134,7 @@ class EditorApp extends React.Component {
           handleCenterAClick={() => this._onCenterAClick()}
           handleRightAClick={() => this._onRightAClick()}
           />
+
         <div className='editor' style={{border: '1px solid grey', padding: '6px'}}>
           <Editor
             customStyleMap={styleMap}
