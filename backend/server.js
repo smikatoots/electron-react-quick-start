@@ -173,15 +173,15 @@ app.post('/save', function(req, res) {
   //               }
   //           }
   //           else {
-              var collabArr = doc.collaborators.slice()
-              collabArr.push(user._id)
-              Document.update({_id: id}, {
-                content: this.editorState,
-                collaborators: collabArr
-              }), function(err, affected, resp) {
-                console.log('Document updated and saved! Collaboratoradded', resp)
-                }
-              }
+              // var collabArr = doc.collaborators.slice()
+              // collabArr.push(user._id)
+              // Document.update({_id: id}, {
+              //   content: this.editorState,
+              //   collaborators: collabArr
+              // }), function(err, affected, resp) {
+              //   console.log('Document updated and saved! Collaboratoradded', resp)
+              //   }
+              // }
   //           }
   //         })
   //       }
