@@ -15,10 +15,6 @@ import { Users, Documents } from '../../backend/models'
 // .then(text => console.log(text))
 // .catch(err => {throw err})
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 4a7bc7825ac9169d152d5f09102539e28e5d3c5c
 const blockRenderMap = Immutable.Map({
   'rightAlign': {wrapper: (<div className='right'></div>)},
   'leftAlign': {wrapper: (<div className='left'></div>)},
@@ -125,7 +121,6 @@ class EditorApp extends React.Component {
       ));
   }
 
-<<<<<<< HEAD
   _save(id) {
     Document.findById(id, function(err, doc) {
       if (err) {
@@ -167,8 +162,6 @@ class EditorApp extends React.Component {
       })
     }
   
-=======
->>>>>>> e5112f5979c62e40caf1bd10299e56f5282d991b
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
