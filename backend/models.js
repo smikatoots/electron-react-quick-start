@@ -40,12 +40,12 @@ var DocumentsSchema = schema({
     // PASSWORD SAME AS ID?
 })
 
-var Users = mongoose.model('Users', UsersSchema);
+var User = mongoose.model('User', UsersSchema);
 
-var Documents = mongoose.model('Documents', DocumentsSchema);
+var Document = mongoose.model('Document', DocumentsSchema);
 
 
 module.exports = {
-    Users: Users,
-    Documents: Documents
+    User: User,
+    Document: Document
 }

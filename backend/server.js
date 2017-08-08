@@ -1,29 +1,33 @@
 var express = require('express');
-var path  = require('path');
+var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local');
 var mongoose = require('mongoose');
+var ReactDOMServer = require('react-dom/server');
+
+var app = express();
+
 mongoose.Promise = global.Promise
 var Models = require('./models')
 var MongoStore = require('connect-mongo')(session)
 var app = express();
-var Document = Models.Documents
-var User = Models.Users
+var Document = Models.Document
+var User = Models.User
 
 var connect = process.env.MONGODB_URI
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(session({
   secret: 'keyboard cat',
   store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
 mongoose.connect(connect);
-
 
 passport.serializeUser((user, done) => {
   done(null, user._id);
@@ -55,9 +59,32 @@ passport.use(new LocalStrategy(function(username, password, done){
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Example route
-app.get('/', function (req, res) {
-  res.send('Hello World!')
+app.post('/register', function(req, res) {
+	console.log('registering')
+	if (req.body.username && req.body.password) {
+		new User({
+			username: req.body.username,
+			password: req.body.password
+		}).save(function(err, user) {
+			if (err) console.log("Error", err);
+			else res.json({success: true});
+		});
+	}
+})
+
+app.post('/verify', function(req, res) {
+	if (req.user) {
+		res.json({success: true})
+	}
+	else res.json({success: false})
+})
+
+app.post('/login', passport.authenticate('local'));
+
+app.use('/login', function(req, res){
+	console.log("req.user", req.user);
+	if (req.user) res.json({success: true});
+	else res.json({success: false});
 })
 
 app.post('/new', function(req, res) {
@@ -141,3 +168,5 @@ app.post('/save', function(req, res) {
 app.listen(3000, function () {
   console.log('Backend server for Electron App running on port 3000!')
 })
+
+module.exports = app;
