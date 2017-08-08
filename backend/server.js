@@ -6,7 +6,8 @@ import session from 'express-session';
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import mongoose from 'mongoose';
-
+import Users from './models'
+import Documents from './models'
 var app = express();
 
 app.use(bodyParser.json());
