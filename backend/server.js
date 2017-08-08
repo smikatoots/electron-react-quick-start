@@ -78,6 +78,17 @@ app.post('/new', function(req, res) {
   })
 })
 
+// app.post('/allDocs', function(req, res) {
+//   User.findById(req.user)
+//   .populate('documents')
+//   .exec((user) => {
+//       return user
+//   })
+//   .then((user) => {
+//
+//   })
+// })
+
 app.post('/save', function(req, res) {
   console.log('hey', req.body)
   var newDoc = new Document({
