@@ -46,6 +46,27 @@ class DocumentPortal extends React.Component {
       this.setState({sharedDocumentID: event.target.value})
   }
 
+  handleShowingDocuments() {
+      fetch('http://localhost:3000/allDocs', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        // body: JSON.stringify({
+        //     title,
+        // })
+      })
+      .then(function(response) {
+        return response.json()
+      })
+      .then(function(body) {
+        console.log('Body of data: ', body)
+      })
+      .catch((err) => {
+        console.log('Error!', err)
+      })
+  }
+
   render() {
     return (
       <div id='portal'>
@@ -56,6 +77,7 @@ class DocumentPortal extends React.Component {
               value={this.state.newDocument}
               placeholder="New Document Title"/><br/>
           <button type="submit" onClick={() => this.handleNewDocumentSubmit()}>Create Document</button><br/><br/>
+
           <input
               type="text"
               onChange={(event) => this.handleSharedDocumentIDChange(event)}
