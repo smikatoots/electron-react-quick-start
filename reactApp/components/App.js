@@ -122,11 +122,13 @@ class EditorApp extends React.Component {
   }
 
   _save() {
+      var content = this.state.editorState.getCurrentContent().getPlainText();
       fetch('http://localhost:3000/save', {
-        method: 'POST', 
-        data: {
-          content: this.state.editorState
-        }
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({content})
       })
       .then(function(response) {
         console.log('response is this:', response)
@@ -139,7 +141,7 @@ class EditorApp extends React.Component {
         console.log('error is err', err)
       })
     }
-  
+
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
