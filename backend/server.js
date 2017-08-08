@@ -72,7 +72,8 @@ app.post('/register', function(req, res) {
 			else {
 				new User({
 					username: req.body.username,
-					password: req.body.password
+					password: req.body.password,
+                    documents: []
 				}).save(function(err, user) {
 					if (err) console.log("Error", err);
 					else res.json({success: true});
@@ -97,7 +98,7 @@ app.post('/login', passport.authenticate('local'));
 
 app.use('/login', function(req, res){
 	console.log("req.user", req.user);
-	if (req.user) res.json({success: true});
+	if (req.user) res.json({userId: req.user._id, success: true});
 	else res.json({success: false});
 })
 
@@ -121,14 +122,15 @@ app.post('/new', function(req, res) {
 })
 
 app.post('/allDocs', function(req, res) {
-    // console.log('route user', req.user);
-    var tempUser = '598a017bfef5f932783d5bf0'
-    console.log(tempUser);
-    // Document.find((err, docs) => {
-    //     console.log('DOCUMENTS', docs);
+    var userId = req.body.userId
+    // User.findById(tempUser, (err, user) => {
+    //     console.log(user);
     // })
-    User.findById(tempUser, (err, user) => {
-        console.log(user);
+    console.log(userId);
+    User.findById(userId)
+    // .populate('documents')
+    .exec((err, userFound) => {
+        console.log(userFound.documents);
     })
   // User.find((user) => {
   //     console.log('USER', user);
@@ -212,17 +214,6 @@ app.post('/save', function(req, res) {
   //               }
   //           }
   //           else {
-<<<<<<< HEAD
-            //   var collabArr = doc.collaborators.slice()
-            //   collabArr.push(user._id)
-            //   Document.update({_id: id}, {
-            //     content: this.editorState,
-            //     collaborators: collabArr
-            //   }), function(err, affected, resp) {
-            //     console.log('Document updated and saved! Collaboratoradded', resp)
-            //     }
-            //   }
-=======
               // var collabArr = doc.collaborators.slice()
               // collabArr.push(user._id)
               // Document.update({_id: id}, {
@@ -232,7 +223,6 @@ app.post('/save', function(req, res) {
               //   console.log('Document updated and saved! Collaboratoradded', resp)
               //   }
               // }
->>>>>>> c7885e2c33f40209c4e8c9e9ce3968fbe814b64a
   //           }
   //         })
   //       }

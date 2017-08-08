@@ -13,7 +13,7 @@ var UsersSchema = schema({
     documents: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Documents'
+            ref: 'Document'
         },
     ]
 })
@@ -26,7 +26,7 @@ var DocumentsSchema = schema({
     },
 	author: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Users'
+        ref: 'User'
 	},
     // collaborators: [
     //     {
