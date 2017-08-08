@@ -115,7 +115,20 @@ app.post('/new', function(req, res) {
     }
     else {
       console.log('Success! Document saved', doc)
-
+        User.findById(id, function(err, user) {
+          if (err) {
+              console.log(err)
+          }
+          else {
+              var docArr = user.documents
+              docArr.push(doc._id)
+              User.update({_id, user._id}, {
+                  documents: docArr
+              }), function(err, affected, resp) {
+                  console.log('new document saved!', resp)
+              }
+          }
+        })
       res.json(doc)
     }
   })
