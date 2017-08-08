@@ -60,29 +60,20 @@ app.get('/', function (req, res) {
   res.send('Hello World!')
 })
 
-
-app.post('/show/:id', function(req, res) {
-  var id = req.params.id
-  Document.findById(id, function(err, doc) {
+app.post('/new', function(req, res) {
+  var newDoc = new Document({
+    title: req.body.title,
+    content: '',
+    // collaborators: [req.body.user._id]
+  })
+  newDoc.save(function(err, doc) {
     if (err) {
-      console.log('error in finding document', id)
+      console.log('Error in saving', err)
+      res.json(err)
     }
     else {
-      User.findById(req.user._id, function(err, user) {
-        if (err) {
-          console.log('couldnt find user', user)
-        }
-        else {
-          var userDocs = user.documents
-          userDocs.push(doc._id)
-          User.update({_id: user._id}, {documents: userDocs}),
-          function(err, affected, resp) {
-            console.log('User model updated', resp)
-            res.json(doc)
-          }
-        }
-      })
-     
+      console.log('Success! Document saved', doc)
+      res.json(doc)
     }
   })
 })

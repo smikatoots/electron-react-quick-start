@@ -22,7 +22,7 @@ class Main extends React.Component {
     return (
         <HashRouter>
             <Switch>
-                <Route exact path='/' component={EditorApp}/>
+                <Route exact path='/' component={DocumentPortal}/>
                 <Route exact path='/editor' component={EditorApp}/>
                 <Route exact path='/login' component={Login}/>
                 {/* both /roster and /roster/:number begin with /roster */}
