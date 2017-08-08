@@ -105,6 +105,30 @@ app.post('/new', function(req, res) {
   })
 })
 
+app.post('/show/:id', function(req, res) {
+  var id = req.params.id
+  Document.findById(id, function(err, doc) {
+    if (err) {
+      console.log('error in finding document', id)
+    }
+    else {
+      User.findById(req.user._id, function(err, user) {
+        if (err) {
+          console.log('couldnt find user', user)
+        }
+        else {
+          var userDocs = user.documents
+          userDocs.push(doc._id)
+          User.update({_id: user._id}, {documents: userDocs}),
+          function(err, affected, resp) {
+            console.log('User model updated', resp)
+            res.json(doc)
+          }
+        }
+      })
+    }
+  })
+})
 app.post('/save', function(req, res) {
   console.log('hey', req.body)
   var newDoc = new Document({
@@ -149,15 +173,15 @@ app.post('/save', function(req, res) {
   //               }
   //           }
   //           else {
-  //             var collabArr = doc.collaborators.slice()
-  //             collabArr.push(user._id)
-  //             Document.update({_id: id}, {
-  //               content: this.editorState,
-  //               collaborators: collabArr
-  //             }), function(err, affected, resp) {
-  //               console.log('Document updated and saved! Collaboratoradded', resp)
-  //               }
-  //             }
+              var collabArr = doc.collaborators.slice()
+              collabArr.push(user._id)
+              Document.update({_id: id}, {
+                content: this.editorState,
+                collaborators: collabArr
+              }), function(err, affected, resp) {
+                console.log('Document updated and saved! Collaboratoradded', resp)
+                }
+              }
   //           }
   //         })
   //       }
