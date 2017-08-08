@@ -124,6 +124,9 @@ class EditorApp extends React.Component {
 
   _save(id) {
       axios('/:'+id+'/save')
+      .then((data) => {
+        console.log(data)
+      })
     }
   
   render() {
