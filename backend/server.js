@@ -121,7 +121,7 @@ app.post('/new', function(req, res) {
           else {
               var docArr = user.documents
               docArr.push(doc._id)
-              User.update({_id, user._id}, {
+              User.update({'_id': user._id}, {
                   documents: docArr
               }), function(err, affected, resp) {
                   console.log('new document saved!', resp)
@@ -225,7 +225,6 @@ app.post('/save', function(req, res) {
   //               }
   //           }
   //           else {
-<<<<<<< HEAD
             //   var collabArr = doc.collaborators.slice()
             //   collabArr.push(user._id)
             //   Document.update({_id: id}, {
@@ -235,17 +234,6 @@ app.post('/save', function(req, res) {
             //     console.log('Document updated and saved! Collaboratoradded', resp)
             //     }
             //   }
-=======
-              // var collabArr = doc.collaborators.slice()
-              // collabArr.push(user._id)
-              // Document.update({_id: id}, {
-              //   content: this.editorState,
-              //   collaborators: collabArr
-              // }), function(err, affected, resp) {
-              //   console.log('Document updated and saved! Collaboratoradded', resp)
-              //   }
-              // }
->>>>>>> c7885e2c33f40209c4e8c9e9ce3968fbe814b64a
   //           }
   //         })
   //       }
