@@ -6,8 +6,9 @@ import Immutable from 'immutable';
 import Toolbar from './Toolbar'
 import Login from './Login'
 import Register from './Register'
-import mongoose from 'mongoose';
-import { Users, Documents } from '../../backend/models'
+import axios from 'axios'
+// import mongoose from 'mongoose';
+// import { Users, Documents } from '../../backend/models'
 
 /* This can check if your electron app can communicate with your backend */
 // fetch('http://localhost:3000')
@@ -122,44 +123,7 @@ class EditorApp extends React.Component {
   }
 
   _save(id) {
-    Document.findById(id, function(err, doc) {
-      if (err) {
-        console.log('error in finding doc to save', err)
-      }
-      else {
-        Users.find({username: req.user}, function(err, user) {
-          if (err) {
-            console.log('error finding user', err)
-          }
-          else {
-            if (doc.author === user._id) {
-              Document.update({_id: id}, {
-                content: this.editorState
-              }), function(err, affected, resp) {
-                console.log('Document updated and saved!', resp)
-                }
-            }
-            else if (doc.collaborators.includes(user._id)) {
-              Document.update({_id: id}, {
-                content: this.editorState
-              }), function(err, affected, resp) {
-                console.log('Document updated and saved!', resp)
-                }
-            }
-            else {
-              var collabArr = doc.collaborators.slice()
-              collabArr.push(user._id)
-              Document.update({_id: id}, {
-                content: this.editorState,
-                collaborators: collabArr
-              }), function(err, affected, resp) {
-                console.log('Document updated and saved! Collaboratoradded', resp)
-                }
-              }
-            }
-          })
-        }
-      })
+      axios('/:'+id+'/save')
     }
   
   render() {
