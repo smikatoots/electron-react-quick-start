@@ -6,6 +6,7 @@ import { Redirect } from 'react-router'
 import Login from './components/Login';
 import Register from './components/Register';
 import EditorApp from './components/App';
+import DocumentPortal from './components/DocumentPortal'
 
 /* This can check if your electron app can communicate with your backend */
 // fetch('http://localhost:3000')
@@ -29,7 +30,8 @@ class Main extends React.Component {
             <Switch>
                 <Route exact path='/' component={Login}/>
                 <Route onEnter={this.requireLogin.bind(this)}>
-                  <Route exact path='/app' component={EditorApp}/>
+                  <Route exact path='/docs' component={DocumentPortal}/>
+                  <Route exact path='/editor' component={EditorApp}/>
                 </Route>
                 {/* both /roster and /roster/:number begin with /roster */}
                 <Route path='/register' component={Register}/>

@@ -46,7 +46,7 @@ class Login extends React.Component {
   }
 
   render() {
-    if (this.state.redirect) return <Redirect to='/app' />;
+    if (this.state.redirect) return <Redirect to='/docs' />;
     return (
       <div id='login'>
           <h1>Login</h1> <br/>

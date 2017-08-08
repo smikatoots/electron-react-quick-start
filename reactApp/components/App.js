@@ -6,32 +6,14 @@ import Immutable from 'immutable';
 import Toolbar from './Toolbar'
 import Login from './Login'
 import Register from './Register'
+// import mongoose from 'mongoose';
+// import { Users, Documents } from '../../backend/models'
 
 /* This can check if your electron app can communicate with your backend */
 // fetch('http://localhost:3000')
 // .then(resp => resp.text())
 // .then(text => console.log(text))
 // .catch(err => {throw err})
-
-class AligningWrapper extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      textAlign: 'left'
-    }
-  }
-
-  render() {
-    return (
-      <div className={this.state.textAlign}>
-        <button onClick={() => this.textAlignLeft()}>Align Left</button>
-        <button onClick={() => this.textAlignCenter()}>Align Center</button>
-        <button onClick={() => this.textAlignRight()}>Align Right</button>
-        {this.props.children}
-      </div>
-    );
-  }
-}
 
 const blockRenderMap = Immutable.Map({
   'rightAlign': {wrapper: (<div className='right'></div>)},
@@ -73,7 +55,6 @@ class EditorApp extends React.Component {
     super(props);
     this.state = {
         editorState: EditorState.createEmpty(),
-        textAlign: 'x'
     };
     this.onChange = (editorState) => this.setState({editorState});
   }
@@ -140,11 +121,36 @@ class EditorApp extends React.Component {
       ));
   }
 
+  _save() {
+      var content = this.state.editorState.getCurrentContent().getPlainText();
+      fetch('http://localhost:3000/save', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            content: content,
+            // user: req.user
+        })
+      })
+      .then(function(response) {
+        console.log('response is this:', response)
+        return response.json()
+      })
+      .then(function(body) {
+        console.log('body is right here: ', body)
+      })
+      .catch((err) => {
+        console.log('error is err', err)
+      })
+    }
 
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
-        <h1>Jam Editor</h1>
+        <h1>Name of Document</h1>
+        <p id="jam-title">Jam Editor</p>
+        <button onClick={() => this._save()}>Save</button>
         <Toolbar
           handleFontSizeChange={this._onFontSizeChange.bind(this)}
           handleFormatClick={(style, event) => this._onFormatClick(style, event)}
@@ -155,6 +161,7 @@ class EditorApp extends React.Component {
           handleCenterAClick={() => this._onCenterAClick()}
           handleRightAClick={() => this._onRightAClick()}
           />
+
         <div className='editor' style={{border: '1px solid grey', padding: '6px'}}>
           <Editor
             customStyleMap={styleMap}

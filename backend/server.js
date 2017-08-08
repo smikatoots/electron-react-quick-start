@@ -6,26 +6,28 @@ var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local');
 var mongoose = require('mongoose');
-
 var ReactDOMServer = require('react-dom/server');
 
-var User = require('./models').User;
-var Document = require('./models').Document;
-
 var app = express();
-app.use(session({ secret: 'keyboard cat'}));
 
-var db = process.env.MONGODB_URI;
-mongoose.connect(db);
+mongoose.Promise = global.Promise
+var Models = require('./models')
+var MongoStore = require('connect-mongo')(session)
+var app = express();
+var Document = Models.Document
+var User = Models.User
 
+var connect = process.env.MONGODB_URI
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.get('/', (request, response) => {
-//     response.sendFile(__dirname + '/public/index.html'); // For React/Redux
-// });
+app.use(session({
+  secret: 'keyboard cat',
+  store: new MongoStore({mongooseConnection: mongoose.connection})
+}));
+mongoose.connect(connect);
 
 passport.serializeUser((user, done) => {
   done(null, user._id);
@@ -84,6 +86,84 @@ app.use('/login', function(req, res){
 	if (req.user) res.json({success: true});
 	else res.json({success: false});
 })
+
+app.post('/new', function(req, res) {
+  var newDoc = new Document({
+    title: req.body.title,
+    content: '',
+    // collaborators: [req.body.user._id]
+  })
+  newDoc.save(function(err, doc) {
+    if (err) {
+      console.log('Error in saving', err)
+      res.json(err)
+    }
+    else {
+      console.log('Success! Document saved', doc)
+      res.json(doc)
+    }
+  })
+})
+
+app.post('/save', function(req, res) {
+  console.log('hey', req.body)
+  var newDoc = new Document({
+    title: 'yo',
+    content: req.body.content,
+    collaborators: []
+  })
+  console.log('yo', newDoc)
+  newDoc.save(function(err, doc) {
+    if (err) {
+      console.log('error in saving', err)
+      res.json(err)
+    }
+    else {
+      console.log('success! doc saved.', doc)
+      res.json(doc)
+    }
+  })
+  // var id = req.params.id
+  // Documents.findById(id, function(err, doc) {
+  //     if (err) {
+  //       console.log('error in finding doc to save', err)
+  //     }
+  //     else {
+  //       Users.find({username: req.user}, function(err, user) {
+  //         if (err) {
+  //           console.log('error finding user', err)
+  //         }
+  //         else {
+  //           if (doc.author === user._id) {
+  //             Document.update({_id: id}, {
+  //               content: this.editorState
+  //             }), function(err, affected, resp) {
+  //               console.log('Document updated and saved!', resp)
+  //               }
+  //           }
+  //           else if (doc.collaborators.includes(user._id)) {
+  //             Document.update({_id: id}, {
+  //               content: this.editorState
+  //             }), function(err, affected, resp) {
+  //               console.log('Document updated and saved!', resp)
+  //               }
+  //           }
+  //           else {
+  //             var collabArr = doc.collaborators.slice()
+  //             collabArr.push(user._id)
+  //             Document.update({_id: id}, {
+  //               content: this.editorState,
+  //               collaborators: collabArr
+  //             }), function(err, affected, resp) {
+  //               console.log('Document updated and saved! Collaboratoradded', resp)
+  //               }
+  //             }
+  //           }
+  //         })
+  //       }
+  //     })
+})
+
 
 app.listen(3000, function () {
   console.log('Backend server for Electron App running on port 3000!')
