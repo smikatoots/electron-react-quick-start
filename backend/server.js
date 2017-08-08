@@ -60,6 +60,24 @@ app.get('/', function (req, res) {
   res.send('Hello World!')
 })
 
+app.post('/new', function(req, res) {
+  var newDoc = new Document({
+    title: req.body.title,
+    content: '',
+    // collaborators: [req.body.user._id]
+  })
+  newDoc.save(function(err, doc) {
+    if (err) {
+      console.log('Error in saving', err)
+      res.json(err)
+    }
+    else {
+      console.log('Success! Document saved', doc)
+      res.json(doc)
+    }
+  })
+})
+
 app.post('/save', function(req, res) {
   console.log('hey', req.body)
   var newDoc = new Document({

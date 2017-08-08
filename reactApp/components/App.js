@@ -128,7 +128,10 @@ class EditorApp extends React.Component {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({content})
+        body: JSON.stringify({
+            content: content,
+            // user: req.user
+        })
       })
       .then(function(response) {
         console.log('response is this:', response)
