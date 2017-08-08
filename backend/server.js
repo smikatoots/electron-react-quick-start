@@ -6,6 +6,7 @@ var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local');
 var mongoose = require('mongoose');
+mongoose.Promise = global.Promise
 var Models = require('./models')
 var MongoStore = require('connect-mongo')(session)
 var app = express();
@@ -70,9 +71,11 @@ app.post('/save', function(req, res) {
   newDoc.save(function(err, doc) {
     if (err) {
       console.log('error in saving', err)
+      res.json(err)
     }
     else {
       console.log('success! doc saved.', doc)
+      res.json(doc)
     }
   })
   // var id = req.params.id
