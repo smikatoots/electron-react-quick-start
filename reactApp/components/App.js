@@ -6,7 +6,6 @@ import Immutable from 'immutable';
 import Toolbar from './Toolbar'
 import Login from './Login'
 import Register from './Register'
-import axios from 'axios'
 // import mongoose from 'mongoose';
 // import { Users, Documents } from '../../backend/models'
 
