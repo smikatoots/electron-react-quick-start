@@ -10,6 +10,12 @@ var UsersSchema = schema({
     password: {
         type: String
     },
+    documents: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Documents'
+        },
+    ]
 })
 var DocumentsSchema = schema({
     title: {
@@ -22,12 +28,12 @@ var DocumentsSchema = schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users'
 	},
-    collaborators: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Users'
-        },
-    ],
+    // collaborators: [
+    //     {
+    //         type: mongoose.Schema.Types.ObjectId,
+    //         ref: 'Users'
+    //     },
+    // ],
     // password: {
     //     type: String
     // }
