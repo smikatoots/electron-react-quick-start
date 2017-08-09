@@ -155,6 +155,7 @@ app.post('/allDocs', function(req, res) {
 })
 
 app.post('/editor/:id', function(req, res) {
+  console.log('REQ', req.params, req);
   var id = req.params.id;
   Document.findById(id, function(err, doc) {
     if (err) {
