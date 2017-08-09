@@ -6,6 +6,8 @@ body {
     box-sizing: border-box;
 }
 
+/* EDITOR APP */
+
 #content {
     width: 480px;
     margin: 0 auto;
@@ -15,13 +17,6 @@ body {
     border: 1px solid grey;
     padding: 6px;
     height: 50vh;
-}
-
-.randoStyling {
-  color: #999;
-  font-family: 'Hoefler Text', Georgia, serif;
-  font-style: italic;
-  text-align: center;
 }
 
 .left {
@@ -51,12 +46,54 @@ h1 {
     line-height: 10px;
     font-size: 20px;
 }
-
 button {
     background-color: white;
     border: 0.1px solid grey;
-    width: 30px;
     height: 30px;
     border-radius: 2px;
-    margin: 50px;
+}
+
+.toolbarButton {
+    width: 30px;
+}
+
+.backButton {
+    width: 30px;
+    color: black;
+}
+
+#header {
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* DOCUMENT PORTAL */
+
+#portal {
+    width: 480px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#docList {
+    margin: 10px;
+    border: 0.05px solid grey;
+    border-radius: 3px;
+    padding: 10px;
+}
+
+.inputs {
+    height: 30px;
+    margin: 10px;
+    padding: 5px;
+    outline: none;
+    border: 0.01px grey solid;
+    border-radius: 2px;
+}
+
+button:hover {
+    background-color: black
+    color: white;
 }

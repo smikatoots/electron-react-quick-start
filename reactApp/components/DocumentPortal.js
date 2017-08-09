@@ -3,6 +3,7 @@ var ReactDOM = require('react-dom');
 import axios from 'axios';
 import { Route, Link } from 'react-router-dom';
 import EditorApp from './EditorApp'
+import axios from 'axios'
 
 class DocumentPortal extends React.Component {
   constructor(props) {
@@ -27,8 +28,7 @@ class DocumentPortal extends React.Component {
       var title = this.state.newDocument;
       this.setState({newDocument: ''})
       axios.post('http://localhost:3000/new', {
-        title: title,
-        userId: localStorage.getItem('userId')
+        title: title
       })
       .then(function(response) {
         console.log('Body of data documents: ', response.data.documents)
@@ -44,8 +44,7 @@ class DocumentPortal extends React.Component {
       var docId = this.state.sharedDocumentID;
       this.setState({sharedDocumentID: ''});
       axios.post('http://localhost:3000/accessShared', {
-          docId,
-          userId: localStorage.getItem('userId')
+          docId
       })
       .then(function(response) {
           console.log('Body of documents from accessShared', response.data.documents);
@@ -74,22 +73,26 @@ class DocumentPortal extends React.Component {
       <div id='portal'>
           <h1> Documents Portal </h1>
           <input
+              className="inputs"
               type="text"
               onChange={(event) => this.handleNewDocumentChange(event)}
               value={this.state.newDocument}
-              placeholder="New Document Title"/><br/>
-          <button type="submit" onClick={() => this.handleNewDocumentSubmit()}>Create Document</button><br/><br/>
-          {this.state.documentsArray.map((foundDoc) =>
-              <div key={foundDoc._id}>
-                  <Link to={'/editor/'+ foundDoc._id}>{foundDoc.title}, {foundDoc._id}</Link><br/>
-              </div>
-          )}
+              placeholder="New Document Title"/>
+          <button type="button" onClick={() => this.handleNewDocumentSubmit()}>Create Document</button><br/>
+          <div id="docList">
+              {this.state.documentsArray.map((foundDoc) =>
+                  <div key={foundDoc._id}>
+                      <Link to={'/editor/'+ foundDoc._id}>{foundDoc.title}</Link><br/>
+                  </div>
+              )}
+          </div>
           <input
+              className="inputs"
               type="text"
               onChange={(event) => this.handleSharedDocumentIDChange(event)}
               value={this.state.sharedDocumentID}
-              placeholder="Shared Document ID"/><br/>
-          <button type="submit" onClick={() => this.handleSharedDocumentIDSubmit()}>Add Shared Document</button>
+              placeholder="Shared Document ID"/>
+          <button type="button" onClick={() => this.handleSharedDocumentIDSubmit()}>Add Shared Document</button>
       </div>
     );
   }

@@ -98,7 +98,7 @@ app.post('/new', function(req, res) {
   var id = req.user._id; //req.body.userId
   var newDoc = new Document({
     title: req.body.title,
-    content: '',
+    content: [],
     // collaborators: [req.body.user._id]
   })
   newDoc.save(function(err, doc) {
@@ -159,12 +159,16 @@ app.post('/editor/:id', function(req, res) {
 
 app.post('/save', function(req, res) {
   var docId = req.body.docId;
-  Document.findByIdAndUpdate(docId, {content: req.body.content}, (err, foundDoc) => {
+  Document.findById(docId, (err, foundDoc) => {
       if (err) {
           console.log("Error!", err);
       }
       else {
-          console.log("Success saving!", foundDoc);
+        var docContent = foundDoc.content
+        foundDoc.content.push(req.body.content)
+        foundDoc.save(function(err, savedDoc) {
+          console.log("Success saving!", savedDoc);
+        })
       }
   })
 })

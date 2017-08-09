@@ -7,7 +7,7 @@ import Immutable from 'immutable';
 import Toolbar from './Toolbar'
 import Login from './Login'
 import Register from './Register'
-
+import axios from 'axios'
 const io = require('socket.io-client')  
 var socket = io.connect('http://localhost:3000');
 // import mongoose from 'mongoose';
@@ -68,22 +68,29 @@ class EditorApp extends React.Component {
   componentWillMount() {
     var id = this.props.match.params.id;
     var self = this;
-    fetch('http://localhost:3000/editor/'+id, {
-        method: 'POST'
-      })
+    axios.post('http://localhost:3000/editor/'+id)
        .then(function(response) {
         console.log('Response is this:', response)
-        return response.json()
+        return response.data
       })
       .then(function(body) {
         console.log('Body of Editor: ', body)
         console.log("THISEDITORSTATE", self.state.editorState);
-        const contentState = ContentState.createFromText(body.content);
+        console.log()
+        var editorStateNew
+        if (body.content.length === 0) {
+          editorStateNew = EditorState.createEmpty()
+        }
+        else {
+          console.log('THIS IS BODY CONTENT:', body.content[body.content.length - 1])
+          var convertedContent = convertFromRaw(JSON.parse(body.content[body.content.length - 1]))
+        // const contentState = ContentState.createFromText(convertedContent);
         // const editorStateNew = EditorState.push(self.state.editorState, contentState);
-        const editorStateNew = EditorState.createWithContent(contentState);
-        console.log("CONTENTSTATE", contentState);
+          // console.log("CONTENTSTATE", contentState);
+          editorStateNew = EditorState.createWithContent(convertedContent);
+        }
         console.log("EDITORSTATE", editorStateNew);
-        console.log("CONTENT", editorStateNew.getCurrentContent().getPlainText());
+        // console.log("CONTENT", editorStateNew.getCurrentContent().getPlainText());
         console.log("TITLE", body.title);
         // self.setState({
         //     title: body.title
@@ -173,14 +180,17 @@ class EditorApp extends React.Component {
   }
 
   _save() {
-      var content = this.state.editorState.getCurrentContent().getPlainText();
+      var contentStatte = this.state.editorState.getCurrentContent()
+      var content = convertToRaw(contentStatte)
+      var stringContent = JSON.stringify(content)
+      console.log('this is stringified content',stringContent)
       fetch('http://localhost:3000/save', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            content: content,
+            content: stringContent,
             docId: this.state.docId
         })
       })
@@ -223,10 +233,16 @@ class EditorApp extends React.Component {
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
-        <h1>{this.state.title}</h1>
-        <p id="jam-title">Jam Editor</p>
-        <Link to='/docs'>Home</Link>
-        <button onClick={() => this._save()}>Save</button>
+        <div id='header'>
+            <Link to='/docs'>
+                <button type="button" className="backButton"><i className="fa fa-arrow-left" aria-hidden="true"></i></button>
+            </Link>
+            <div>
+                <h1>{this.state.title}</h1>
+                <p id="jam-title">Jam Editor</p>
+            </div>
+            <button onClick={() => this._save()}>Save</button>
+        </div>
         <Toolbar
           handleFontSizeChange={this._onFontSizeChange.bind(this)}
           handleFormatClick={(style, event) => this._onFormatClick(style, event)}
@@ -240,6 +256,8 @@ class EditorApp extends React.Component {
 
         <div className='editor' style={{border: '1px solid grey', padding: '6px'}}>
           <Editor
+            // className='actualEditor'
+            placeholder='Type your text here'
             customStyleMap={styleMap}
             editorState={this.state.editorState}
             onChange={(editorState) => this.updateEditorInState(editorState)}
