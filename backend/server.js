@@ -167,18 +167,17 @@ app.post('/editor/:id', function(req, res) {
   })
 })
 
-// app.post('/save', function(req, res) {
-//   var docId = req.body.docId;
-//   var userId = req.body.userId;
-//   User.findById(userId, (err, foundUser) => {
-//       if (err) {
-//           console.log("Error", err);
-//       } else {
-//           var newDocArray = foundUser.documents;
-//           newDocArray.push(docId)
-//       }
-//   })
-// })
+app.post('/save', function(req, res) {
+  var docId = req.body.docId;
+  Document.findByIdAndUpdate(docId, {content: req.body.content}, (err, foundDoc) => {
+      if (err) {
+          console.log("Error!", err);
+      }
+      else {
+          console.log("Success saving!", foundDoc);
+      }
+  })
+})
 
 
 const server = app.listen(3000, function () {
