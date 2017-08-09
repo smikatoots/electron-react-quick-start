@@ -61,6 +61,7 @@ class EditorApp extends React.Component {
   }
 
   componentWillMount() {
+    console.log(this.props.params.id)
     var id = localStorage.getItem('userId')
     fetch('http://localhost:3000/show/:'+id, {
         method: 'POST'

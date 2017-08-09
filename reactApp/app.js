@@ -5,7 +5,7 @@ import { Editor, EditorState, RichUtils, Immutable } from 'draft-js';
 import { Redirect } from 'react-router'
 import Login from './components/Login';
 import Register from './components/Register';
-import EditorApp from './components/App';
+import EditorApp from './components/Editor';
 import DocumentPortal from './components/DocumentPortal'
 
 class Main extends React.Component {
