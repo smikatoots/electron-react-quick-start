@@ -221,10 +221,16 @@ class EditorApp extends React.Component {
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
-        <h1>{this.state.title}</h1>
-        <p id="jam-title">Jam Editor</p>
-        <Link to='/docs'>Home</Link>
-        <button onClick={() => this._save()}>Save</button>
+        <div id='header'>
+            <Link to='/docs'>
+                <button type="button" className="backButton"><i className="fa fa-arrow-left" aria-hidden="true"></i></button>
+            </Link>
+            <div>
+                <h1>{this.state.title}</h1>
+                <p id="jam-title">Jam Editor</p>
+            </div>
+            <button onClick={() => this._save()}>Save</button>
+        </div>
         <Toolbar
           handleFontSizeChange={this._onFontSizeChange.bind(this)}
           handleFormatClick={(style, event) => this._onFormatClick(style, event)}
@@ -238,6 +244,8 @@ class EditorApp extends React.Component {
 
         <div className='editor' style={{border: '1px solid grey', padding: '6px'}}>
           <Editor
+            // className='actualEditor'
+            placeholder='Type your text here'
             customStyleMap={styleMap}
             editorState={this.state.editorState}
             onChange={this.updateEditorInState.bind(this)}

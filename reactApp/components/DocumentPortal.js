@@ -106,22 +106,26 @@ class DocumentPortal extends React.Component {
       <div id='portal'>
           <h1> Documents Portal </h1>
           <input
+              className="inputs"
               type="text"
               onChange={(event) => this.handleNewDocumentChange(event)}
               value={this.state.newDocument}
-              placeholder="New Document Title"/><br/>
-          <button type="submit" onClick={() => this.handleNewDocumentSubmit()}>Create Document</button><br/><br/>
-          {this.state.documentsArray.map((foundDoc) =>
-              <div key={foundDoc._id}>
-                  <Link to={'/editor/'+ foundDoc._id}>{foundDoc.title}, {foundDoc._id}</Link><br/>
-              </div>
-          )}
+              placeholder="New Document Title"/>
+          <button type="button" onClick={() => this.handleNewDocumentSubmit()}>Create Document</button><br/>
+          <div id="docList">
+              {this.state.documentsArray.map((foundDoc) =>
+                  <div key={foundDoc._id}>
+                      <Link to={'/editor/'+ foundDoc._id}>{foundDoc.title}</Link><br/>
+                  </div>
+              )}
+          </div>
           <input
+              className="inputs"
               type="text"
               onChange={(event) => this.handleSharedDocumentIDChange(event)}
               value={this.state.sharedDocumentID}
-              placeholder="Shared Document ID"/><br/>
-          <button type="submit" onClick={() => this.handleSharedDocumentIDSubmit()}>Add Shared Document</button>
+              placeholder="Shared Document ID"/>
+          <button type="button" onClick={() => this.handleSharedDocumentIDSubmit()}>Add Shared Document</button>
       </div>
     );
   }
