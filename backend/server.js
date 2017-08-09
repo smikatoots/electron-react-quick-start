@@ -20,39 +20,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const port = 3000;
-const server = app.listen(port, function(err) {  
-  if (err) {
-    console.log(err);
-  } else {
-    open(`http://localhost:${port}`);
-  }
-});
-
-const io = require('socket.io')(server); 
-
-io.on('connection', (socket) => {  
-  console.log('a user connected');
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-
-  socket.on('leave room', (data) => {
-    socket.leave(data.room)
-  })
-
-  socket.on('room', function(data) {
-    socket.join(data.room);
-  });
-
-  socket.on('coding event', function(data) {
-    socket.broadcast.to(data.room).emit('receive code',   
-      data)
-  }
-}
-
-
 app.use(session({
   secret: 'keyboard cat',
   store: new MongoStore({mongooseConnection: mongoose.connection})
@@ -262,8 +229,30 @@ app.post('/save', function(req, res) {
 })
 
 
-app.listen(3000, function () {
+const server = app.listen(3000, function () {
   console.log('Backend server for Electron App running on port 3000!')
 })
+
+const io = require('socket.io')(server); 
+
+io.on('connection', (socket) => {  
+  console.log('a user connected');
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+
+  socket.on('leave room', (data) => {
+    socket.leave(data.room)
+  })
+
+  socket.on('room', function(data) {
+    socket.join(data.room);
+  });
+
+  socket.on('coding event', function(data) {
+    socket.broadcast.to(data.room).emit('receive code', data);
+  });
+});
 
 module.exports = app;
