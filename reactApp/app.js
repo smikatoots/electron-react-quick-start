@@ -23,8 +23,8 @@ class Main extends React.Component {
         <HashRouter>
             <Switch>
                 <Route exact path='/' component={Login}/>
+                <Route exact path='/editor/:id' component={EditorApp} onEnter={this.requireLogin.bind(this)}/>
                 <Route exact path='/docs' component={DocumentPortal} onEnter={this.requireLogin.bind(this)}/>
-                <Route path='/editor/:id' component={EditorApp} onEnter={this.requireLogin.bind(this)}/>
                 <Route path='/register' component={Register}/>
             </Switch>
         </HashRouter>

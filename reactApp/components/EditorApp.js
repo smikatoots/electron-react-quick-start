@@ -1,7 +1,8 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 import { BrowserRouter } from 'react-router-dom';
-import { Editor, EditorState, RichUtils, DefaultDraftBlockRenderMap } from 'draft-js';
+import { Link } from 'react-router-dom';
+import { ContentState, Editor, EditorState, RichUtils, DefaultDraftBlockRenderMap } from 'draft-js';
 import Immutable from 'immutable';
 import Toolbar from './Toolbar'
 import Login from './Login'
@@ -58,18 +59,19 @@ class EditorApp extends React.Component {
     super(props);
     this.state = {
         editorState: EditorState.createEmpty(),
-        title: ''
+        title: '',
+        docId: ''
     };
     //this.onChange = (editorState) => this.setState({editorState});
   }
 
-  updateEditorFromSockets(payload) {
-    this.setState({editorState: payload.newEditor})
-  }
+  // updateEditorFromSockets(payload) {
+  //   this.setState({editorState: payload.newEditor})
+  // }
 
   componentWillMount() {
-    console.log(this.props.match.params.id)
-    var id = localStorage.getItem('userId')
+    var id = this.props.match.params.id;
+    var self = this;
     fetch('http://localhost:3000/editor/'+id, {
         method: 'POST'
       })
@@ -78,11 +80,30 @@ class EditorApp extends React.Component {
         return response.json()
       })
       .then(function(body) {
-        console.log('Body is right here: ', body)
-        this.setState({
-          editorState: body.content,
-          title: body.title
+        console.log('Body of Editor: ', body)
+        console.log("THISEDITORSTATE", self.state.editorState);
+        const contentState = ContentState.createFromText(body.content);
+        // const editorStateNew = EditorState.push(self.state.editorState, contentState);
+        const editorStateNew = EditorState.createWithContent(contentState);
+        console.log("CONTENTSTATE", contentState);
+        console.log("EDITORSTATE", editorStateNew);
+        console.log("CONTENT", editorStateNew.getCurrentContent().getPlainText());
+        console.log("TITLE", body.title);
+        // self.setState({
+        //     title: body.title
+        // })
+        console.log("TITLE STATE", self.state);
+        self.setState({
+            title: body.title,
+            editorState: editorStateNew,
+            docId: id
         })
+        console.log("EDITOR STATE", self.state);
+        // self.setState({
+        //   editorState: editorStateNew,
+        //   title: body.title
+        // })
+        console.log("next state", self.state);
       })
       .catch((err) => {
         console.log('Error is err', err)
@@ -160,7 +181,8 @@ class EditorApp extends React.Component {
         },
         body: JSON.stringify({
             content: content,
-            // user: req.user
+            docId: this.state.docId
+            userId: localStorage.getItem('userId')
         })
       })
       .then(function(response) {
@@ -175,30 +197,30 @@ class EditorApp extends React.Component {
       })
     }
 
-  componentDidMount() {
-   if (this.props.doc.id === undefined) {
-      // display all docs
-    } else {
-      socket.emit('room', {room: this.props.doc.id});
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    socket.emit('room', {room: nextProps.doc.id})
-  }
-
-  componentWillUnmount() {
-    socket.emit('leave room', {
-      room: this.props.doc.id
-    })
-  }
-
+  // componentDidMount() {
+  //  if (this.props.doc.id === undefined) {
+  //     // display all docs
+  //   } else {
+  //     socket.emit('room', {room: this.props.doc.id});
+  //   }
+  // }
+  //
+  // componentWillReceiveProps(nextProps) {
+  //   socket.emit('room', {room: nextProps.doc.id})
+  // }
+  //
+  // componentWillUnmount() {
+  //   socket.emit('leave room', {
+  //     room: this.props.doc.id
+  //   })
+  // }
+  //
   updateEditorInState(newState) {
     this.setState({editorState: newState})
-    socket.emit('coding event', {
-      room: this.props.doc.id,
-      editorState: newState
-    })
+    // socket.emit('coding event', {
+    //   room: this.props.doc.id,
+    //   editorState: newState
+    // })
   }
 
   render() {

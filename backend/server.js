@@ -155,7 +155,6 @@ app.post('/allDocs', function(req, res) {
 })
 
 app.post('/editor/:id', function(req, res) {
-  console.log('REQ', req.params, req);
   var id = req.params.id;
   Document.findById(id, function(err, doc) {
     if (err) {
@@ -168,64 +167,18 @@ app.post('/editor/:id', function(req, res) {
   })
 })
 
-app.post('/save', function(req, res) {
-  console.log('hey', req.body)
-  var newDoc = new Document({
-    title: 'yo',
-    content: req.body.content,
-    collaborators: []
-  })
-  console.log('yo', newDoc)
-  newDoc.save(function(err, doc) {
-    if (err) {
-      console.log('error in saving', err)
-      res.json(err)
-    }
-    else {
-      console.log('success! doc saved.', doc)
-      res.json(doc)
-    }
-  })
-  // var id = req.params.id
-  // Documents.findById(id, function(err, doc) {
-  //     if (err) {
-  //       console.log('error in finding doc to save', err)
-  //     }
-  //     else {
-  //       Users.find({username: req.user}, function(err, user) {
-  //         if (err) {
-  //           console.log('error finding user', err)
-  //         }
-  //         else {
-  //           if (doc.author === user._id) {
-  //             Document.update({_id: id}, {
-  //               content: this.editorState
-  //             }), function(err, affected, resp) {
-  //               console.log('Document updated and saved!', resp)
-  //               }
-  //           }
-  //           else if (doc.collaborators.includes(user._id)) {
-  //             Document.update({_id: id}, {
-  //               content: this.editorState
-  //             }), function(err, affected, resp) {
-  //               console.log('Document updated and saved!', resp)
-  //               }
-  //           }
-  //           else {
-            //   var collabArr = doc.collaborators.slice()
-            //   collabArr.push(user._id)
-            //   Document.update({_id: id}, {
-            //     content: this.editorState,
-            //     collaborators: collabArr
-            //   }), function(err, affected, resp) {
-            //     console.log('Document updated and saved! Collaboratoradded', resp)
-            //     }
-            //   }
-  //           }
-  //         })
-  //       }
-  //     })
-})
+// app.post('/save', function(req, res) {
+//   var docId = req.body.docId;
+//   var userId = req.body.userId;
+//   User.findById(userId, (err, foundUser) => {
+//       if (err) {
+//           console.log("Error", err);
+//       } else {
+//           var newDocArray = foundUser.documents;
+//           newDocArray.push(docId)
+//       }
+//   })
+// })
 
 
 const server = app.listen(3000, function () {
