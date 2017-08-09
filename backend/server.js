@@ -152,7 +152,7 @@ app.post('/allDocs', function(req, res) {
 })
 
 app.post('/editor/:id', function(req, res) {
-  var id = req.params.id
+  var id = req.params.id.slice(':')[1]
   Document.findById(id, function(err, doc) {
     if (err) {
       console.log('error in finding document', id)

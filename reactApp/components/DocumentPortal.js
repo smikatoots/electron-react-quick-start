@@ -48,18 +48,18 @@ class DocumentPortal extends React.Component {
   }
 
   handleSharedDocumentIDSubmit(event) {
-      var self = this;
-      var docID = this.state.sharedDocumentID;
-      this.setState({sharedDocumentID: event.target.value})
-      fetch('http://localhost:3000/shared') {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+    //   var self = this;
+    //   var docID = this.state.sharedDocumentID;
+    //   this.setState({sharedDocumentID: event.target.value})
+    //   fetch('http://localhost:3000/shared') {
+    //       method: 'POST',
+    //       headers: {
+    //           'Content-Type': 'application/json'
+    //       },
+    //       body: JSON.stringify({
 
-          })
-      }
+    //       })
+    //   }
   }
 
   componentWillMount() {
