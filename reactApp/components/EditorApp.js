@@ -194,27 +194,27 @@ class EditorApp extends React.Component {
 
   componentDidMount() { 
   console.log(this.props); 
-   if (!this.props.docState.sharedDocumentId) {
+   if (!this.props.match.params.id) {
       // display all docs
     } else {
-      socket.emit('room', {room: this.props.docState.sharedDocumentId});
+      socket.emit('room', {room: this.props.match.params.id});
     }
   }
 
   componentWillReceiveProps(nextProps) {  
-    socket.emit('room', {room: nextProps.docState.sharedDocumentId})
+    socket.emit('room', {room: nextProps.match.params.id})
   }
 
   componentWillUnmount() {  
     socket.emit('leave room', {
-      room: this.props.docState.sharedDocumentId
+      room: this.props.match.params.id
     })
   }
 
   updateEditorInState(newState) {  
     this.setState({newState})
     socket.emit('coding event', {
-      room: this.props.docState.sharedDocumentId,
+      room: this.props.match.params.id,
       editorState: newState
     })   
   }
