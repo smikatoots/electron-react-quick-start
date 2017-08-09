@@ -8,7 +8,7 @@ import Toolbar from './Toolbar'
 import Login from './Login'
 import Register from './Register'
 import axios from 'axios'
-const io = require('socket.io-client')  
+const io = require('socket.io-client')
 var socket = io.connect('http://localhost:3000');
 // import mongoose from 'mongoose';
 // import { Users, Documents } from '../../backend/models'
@@ -202,7 +202,7 @@ class EditorApp extends React.Component {
       })
     }
 
-  componentDidMount() { 
+  componentDidMount() {
     socket.emit('room', {room: this.props.match.params.id});
     socket.on('receive code', (payload) => {
       var content = EditorState.createWithContent(convertFromRaw(payload))
@@ -211,23 +211,23 @@ class EditorApp extends React.Component {
     });
   }
 
-  // componentWillReceiveProps(nextProps) {  
+  // componentWillReceiveProps(nextProps) {
   //   console.log("nextProps", nextProps)
   //   socket.emit('room', {room: nextProps.match.params.id})
   // }
 
-  componentWillUnmount() {  
+  componentWillUnmount() {
     socket.emit('leave room', {
       room: this.props.match.params.id
     })
   }
 
-  updateEditorInState(newState) { 
+  updateEditorInState(newState) {
     this.setState({editorState: newState});
     socket.emit('coding event', {
       room: this.props.match.params.id,
       contentState: convertToRaw(newState.getCurrentContent())
-    })   
+    })
   }
 
   render() {
