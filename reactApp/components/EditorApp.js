@@ -8,7 +8,7 @@ import Toolbar from './Toolbar'
 import Login from './Login'
 import Register from './Register'
 import axios from 'axios'
-const io = require('socket.io-client')  
+const io = require('socket.io-client')
 var socket = io.connect('http://localhost:3000');
 // import mongoose from 'mongoose';
 // import { Users, Documents } from '../../backend/models'
@@ -202,8 +202,8 @@ class EditorApp extends React.Component {
       })
     }
 
-  componentDidMount() { 
-  console.log(this.props); 
+  componentDidMount() {
+  console.log(this.props);
    if (!this.props.match.params.id) {
       // display all docs
     } else {
@@ -211,28 +211,27 @@ class EditorApp extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {  
+  componentWillReceiveProps(nextProps) {
     socket.emit('room', {room: nextProps.match.params.id})
   }
 
-  componentWillUnmount() {  
+  componentWillUnmount() {
     socket.emit('leave room', {
       room: this.props.match.params.id
     })
   }
 
-  updateEditorInState(newState) {  
+  updateEditorInState(newState) {
     this.setState({newState})
     socket.emit('coding event', {
       room: this.props.match.params.id,
       editorState: newState
-    })   
+    })
   }
 
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
-<<<<<<< HEAD
         <div id='header'>
             <Link to='/docs'>
                 <button type="button" className="backButton"><i className="fa fa-arrow-left" aria-hidden="true"></i></button>
@@ -243,12 +242,6 @@ class EditorApp extends React.Component {
             </div>
             <button onClick={() => this._save()}>Save</button>
         </div>
-=======
-        <h1>{this.state.title}</h1>
-        <p id="jam-title">Jam Editor</p>
-        <Link to='/docs'>Home</Link>
-        <button onClick={this._save.bind(this)}>Save</button>
->>>>>>> cff515937a7e852a5d6d12e4a46bdbff32e3c8f8
         <Toolbar
           handleFontSizeChange={this._onFontSizeChange.bind(this)}
           handleFormatClick={(style, event) => this._onFormatClick(style, event)}
