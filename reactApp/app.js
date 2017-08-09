@@ -14,8 +14,8 @@ class Main extends React.Component {
   }
 
   requireLogin() {
-    console.log("here", localStorage.user)
-    if (!localStorage.user) return (<Redirect to='/' />);
+    console.log("here", localStorage.getItem('userId'))
+    if (!localStorage.getItem('userId')) return (<Redirect to='/' />);
   }
 
   render() {
