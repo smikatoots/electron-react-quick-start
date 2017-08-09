@@ -20,6 +20,39 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+const port = 3000;
+const server = app.listen(port, function(err) {  
+  if (err) {
+    console.log(err);
+  } else {
+    open(`http://localhost:${port}`);
+  }
+});
+
+const io = require('socket.io')(server); 
+
+io.on('connection', (socket) => {  
+  console.log('a user connected');
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+
+  socket.on('leave room', (data) => {
+    socket.leave(data.room)
+  })
+
+  socket.on('room', function(data) {
+    socket.join(data.room);
+  });
+
+  socket.on('coding event', function(data) {
+    socket.broadcast.to(data.room).emit('receive code',   
+      data)
+  }
+}
+
+
 app.use(session({
   secret: 'keyboard cat',
   store: new MongoStore({mongooseConnection: mongoose.connection})
@@ -85,13 +118,6 @@ app.post('/register', function(req, res) {
 		console.log('Missing username or password');
 		res.json({success: false});
 	}
-})
-
-app.post('/verify', function(req, res) {
-	if (req.user) {
-		res.json({success: true})
-	}
-	else res.json({success: false})
 })
 
 app.post('/login', passport.authenticate('local'));
