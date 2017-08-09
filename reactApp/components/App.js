@@ -58,35 +58,12 @@ class EditorApp extends React.Component {
     super(props);
     this.state = {
         editorState: EditorState.createEmpty(),
-        title: ''
     };
     //this.onChange = (editorState) => this.setState({editorState});
   }
 
   updateEditorFromSockets(payload) {
     this.setState({editorState: payload.newEditor})
-  }
-
-  componentWillMount() {
-    console.log(this.props.match.params.id)
-    var id = localStorage.getItem('userId')
-    fetch('http://localhost:3000/editor/:'+id, {
-        method: 'POST'
-      })
-       .then(function(response) {
-        console.log('response is this:', response)
-        return response.json()
-      })
-      .then(function(body) {
-        console.log('body is right here: ', body)
-        this.setState({
-          editorState: body.content,
-          title: body.title
-        })
-      })
-      .catch((err) => {
-        console.log('error is err', err)
-      })
   }
 
   _onFormatClick(style) {
@@ -176,27 +153,27 @@ class EditorApp extends React.Component {
     }
 
   componentDidMount() {  
-   if (this.props.doc.id === undefined) {
+   if (!this.props.docState.sharedDocumentId) {
       // display all docs
     } else {
-      socket.emit('room', {room: this.props.doc.id});
+      socket.emit('room', {room: this.props.docState.sharedDocumentId});
     }
   }
 
   componentWillReceiveProps(nextProps) {  
-    socket.emit('room', {room: nextProps.doc.id})
+    socket.emit('room', {room: nextProps.docState.sharedDocumentId})
   }
 
   componentWillUnmount() {  
     socket.emit('leave room', {
-      room: this.props.doc.id
+      room: this.props.docState.sharedDocumentId
     })
   }
 
   updateEditorInState(newState) {  
     this.setState({editorState: newState})
     socket.emit('coding event', {
-      room: this.props.doc.id,
+      room: this.props.docState.sharedDocumentId,
       editorState: newState
     })   
   }
@@ -204,7 +181,7 @@ class EditorApp extends React.Component {
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
-        <h1>{this.state.title}</h1>
+        <h1>Name of Document</h1>
         <p id="jam-title">Jam Editor</p>
         <button onClick={() => this._save()}>Save</button>
         <Toolbar

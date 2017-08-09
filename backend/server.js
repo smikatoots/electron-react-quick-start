@@ -87,13 +87,6 @@ app.post('/register', function(req, res) {
 	}
 })
 
-app.post('/verify', function(req, res) {
-	if (req.user) {
-		res.json({success: true})
-	}
-	else res.json({success: false})
-})
-
 app.post('/login', passport.authenticate('local'));
 
 app.use('/login', function(req, res){
@@ -129,17 +122,27 @@ app.post('/new', function(req, res) {
                   console.log('New document *actually* saved!', resp)
                   res.json(resp)
               })
-              //
-            //   , {
-            //       documents: docArr
-            //   }, function(err, resp, changed) {
-            //
-            //         res.json(docArr)
-            //   })
           }
         })
     }
   })
+})
+
+app.post('/accessShared', function(req, res) {
+    console.log('req.body', req.body);
+    var docId = req.body.docId;
+    var userId = req.body.userId;
+    User.findById(userId)
+    .exec((err, userFound) => {
+        var docArr = userFound.documents;
+        docArr.push(docId);
+        User.findOneAndUpdate({_id: userFound._id}, {documents: docArr}, {new: true})
+        .populate('documents')
+        .exec((err, resp) => {
+            console.log('New shared document saved!', resp)
+            res.json(resp)
+        })
+    })
 })
 
 app.post('/allDocs', function(req, res) {
@@ -236,8 +239,30 @@ app.post('/save', function(req, res) {
 })
 
 
-app.listen(3000, function () {
+const server = app.listen(3000, function () {
   console.log('Backend server for Electron App running on port 3000!')
 })
+
+const io = require('socket.io')(server); 
+
+io.on('connection', (socket) => {  
+  console.log('a user connected');
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+
+  socket.on('leave room', (data) => {
+    socket.leave(data.room)
+  })
+
+  socket.on('room', function(data) {
+    socket.join(data.room);
+  });
+
+  socket.on('coding event', function(data) {
+    socket.broadcast.to(data.room).emit('receive code', data);
+  });
+});
 
 module.exports = app;
