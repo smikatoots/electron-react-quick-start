@@ -103,6 +103,7 @@ app.use('/login', function(req, res){
 })
 
 app.post('/new', function(req, res) {
+  var id = req.body.userId
   var newDoc = new Document({
     title: req.body.title,
     content: '',
@@ -122,41 +123,35 @@ app.post('/new', function(req, res) {
           else {
               var docArr = user.documents
               docArr.push(doc._id)
-              User.update({'_id': user._id}, {
-                  documents: docArr
-              }), function(err, affected, resp) {
-                  console.log('new document saved!', resp)
-              }
+              User.findOneAndUpdate({_id: user._id}, {documents: docArr}, {new: true})
+              .populate('documents')
+              .exec((err, resp) => {
+                  console.log('New document *actually* saved!', resp)
+                  res.json(resp)
+              })
+              //
+            //   , {
+            //       documents: docArr
+            //   }, function(err, resp, changed) {
+            //
+            //         res.json(docArr)
+            //   })
           }
         })
-      res.json(doc)
     }
   })
 })
 
 app.post('/allDocs', function(req, res) {
     var userId = req.body.userId
-    console.log('userId', req.body.userId);
     User.findById(userId)
     .populate('documents')
     .exec((err, userFound) => {
-        console.log(userFound);
-        console.log(userFound.documents);
+        res.json(userFound)
     })
-  // User.find((user) => {
-  //     console.log('USER', user);
-  // })
-  // .populate('documents')
-  // .exec((user) => {
-  //     console.log("USERS", user);
-  //     return user
-  // })
-  // .then((user) => {
-  //
-  // })
 })
 
-app.post('/show/:id', function(req, res) {
+app.post('/editor/:id', function(req, res) {
   var id = req.params.id
   Document.findById(id, function(err, doc) {
     if (err) {
