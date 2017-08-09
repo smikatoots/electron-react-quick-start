@@ -111,7 +111,6 @@ class DocumentPortal extends React.Component {
               value={this.state.newDocument}
               placeholder="New Document Title"/><br/>
           <button type="submit" onClick={() => this.handleNewDocumentSubmit()}>Create Document</button><br/><br/>
-          <Route path='/editor/:id' render={LoadEditorApp} />
           {this.state.documentsArray.map((foundDoc) =>
               <div key={foundDoc._id}>
                   <Link to={'/editor/'+ foundDoc._id}>{foundDoc.title}, {foundDoc._id}</Link><br/>
