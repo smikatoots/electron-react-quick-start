@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var axios = require('axios');
 import { Redirect } from 'react-router'
 
 import { Route, Link } from 'react-router-dom';
@@ -26,17 +27,11 @@ class Register extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    fetch('http://localhost:3000/register', {
-      method: 'POST',
-      body: JSON.stringify(Object.assign({}, this.state)),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(res => {
-      return res.json();
-    }).then(res => {
-      if (res.success) {
-        this.setState({
+    var self = this;
+    axios.post('http://localhost:3000/login', self.state)
+    .then(res => {
+      if (res.data.success) {
+        self.setState({
           redirect: true
         });
       }

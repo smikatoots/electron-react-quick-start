@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Redirect } from 'react-router'
+import { Redirect } from 'react-router';
+import axios from 'axios';
 import { Route, Link } from 'react-router-dom';
-import Register from './Register'
+import Register from './Register';
 
 
 // import {Editor, EditorState, RichUtils, Immutable} from 'draft-js';
@@ -27,20 +28,15 @@ class Login extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    fetch('http://localhost:3000/login', {
-      method: 'POST',
-      body: JSON.stringify(Object.assign({}, this.state)),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(res => {
-      return res.json();
-    }).then(res => {
-      if (res.success) {
-        this.setState({
+    var self = this;
+    axios.post('http://localhost:3000/login', self.state)
+    .then(function(response) {
+      if (response.data.success) {
+        console.log(response)
+        self.setState({
           redirect: true
         });
-        localStorage.setItem('userId', res.userId)
+        localStorage.setItem('userId', response.data.userId)
       }
     }).catch(err => err);
   }
