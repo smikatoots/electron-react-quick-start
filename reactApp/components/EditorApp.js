@@ -180,6 +180,7 @@ class EditorApp extends React.Component {
   }
 
   _save() {
+      alert('Document updated and saved!')
       var contentStatte = this.state.editorState.getCurrentContent()
       var content = convertToRaw(contentStatte)
       var stringContent = JSON.stringify(content)
@@ -194,8 +195,8 @@ class EditorApp extends React.Component {
             docId: this.state.docId
         })
       })
-      .then(function() {
-        console.log("Saved!");
+      .then(() => {
+        console.log("Saved!", data);
       })
       .catch((err) => {
         console.log('Error is err', err)
