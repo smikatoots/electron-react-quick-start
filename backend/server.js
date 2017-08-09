@@ -145,94 +145,36 @@ app.post('/allDocs', function(req, res) {
 })
 
 app.post('/editor/:id', function(req, res) {
-  var id = req.params.id
+  var id = req.params.id;
   Document.findById(id, function(err, doc) {
     if (err) {
-      console.log('error in finding document', id)
+      console.log('Error in finding document', id)
     }
     else {
-      User.findById(req.user._id, function(err, user) {
-        if (err) {
-          console.log('couldnt find user', user)
-        }
-        else {
-          var userDocs = user.documents
-          userDocs.push(doc._id)
-          User.update({_id: user._id}, {documents: userDocs}),
-          function(err, affected, resp) {
-            console.log('User model updated', resp)
-            res.json(doc)
-          }
-        }
-      })
+      console.log('Document found', id, doc);
+      res.json(doc);
     }
   })
 })
 
-app.post('/save', function(req, res) {
-  console.log('hey', req.body)
-  var newDoc = new Document({
-    title: 'yo',
-    content: req.body.content,
-    collaborators: []
-  })
-  console.log('yo', newDoc)
-  newDoc.save(function(err, doc) {
-    if (err) {
-      console.log('error in saving', err)
-      res.json(err)
-    }
-    else {
-      console.log('success! doc saved.', doc)
-      res.json(doc)
-    }
-  })
-  // var id = req.params.id
-  // Documents.findById(id, function(err, doc) {
-  //     if (err) {
-  //       console.log('error in finding doc to save', err)
-  //     }
-  //     else {
-  //       Users.find({username: req.user}, function(err, user) {
-  //         if (err) {
-  //           console.log('error finding user', err)
-  //         }
-  //         else {
-  //           if (doc.author === user._id) {
-  //             Document.update({_id: id}, {
-  //               content: this.editorState
-  //             }), function(err, affected, resp) {
-  //               console.log('Document updated and saved!', resp)
-  //               }
-  //           }
-  //           else if (doc.collaborators.includes(user._id)) {
-  //             Document.update({_id: id}, {
-  //               content: this.editorState
-  //             }), function(err, affected, resp) {
-  //               console.log('Document updated and saved!', resp)
-  //               }
-  //           }
-  //           else {
-            //   var collabArr = doc.collaborators.slice()
-            //   collabArr.push(user._id)
-            //   Document.update({_id: id}, {
-            //     content: this.editorState,
-            //     collaborators: collabArr
-            //   }), function(err, affected, resp) {
-            //     console.log('Document updated and saved! Collaboratoradded', resp)
-            //     }
-            //   }
-  //           }
-  //         })
-  //       }
-  //     })
-})
+// app.post('/save', function(req, res) {
+//   var docId = req.body.docId;
+//   var userId = req.body.userId;
+//   User.findById(userId, (err, foundUser) => {
+//       if (err) {
+//           console.log("Error", err);
+//       } else {
+//           var newDocArray = foundUser.documents;
+//           newDocArray.push(docId)
+//       }
+//   })
+// })
 
 var server = require('http').Server(app);
 
-const io = require('socket.io')(server); 
+const io = require('socket.io')(server);
 
-io.on('connection', (socket) => {  
+io.on('connection', (socket) => {
   console.log('a user connected');
 
   socket.on('disconnect', () => {

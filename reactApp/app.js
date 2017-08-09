@@ -5,7 +5,11 @@ import { Editor, EditorState, RichUtils, Immutable } from 'draft-js';
 import { Redirect } from 'react-router'
 import Login from './components/Login';
 import Register from './components/Register';
+<<<<<<< HEAD
 import EditorApp from './components/App';
+=======
+import EditorApp from './components/EditorApp';
+>>>>>>> d0b939e0774b732322ccabc0fb0bf0f4c5cc2c1d
 import DocumentPortal from './components/DocumentPortal'
 
 class Main extends React.Component {
@@ -23,9 +27,8 @@ class Main extends React.Component {
         <HashRouter>
             <Switch>
                 <Route exact path='/' component={Login}/>
+                <Route exact path='/editor/:id' component={EditorApp} onEnter={this.requireLogin.bind(this)}/>
                 <Route exact path='/docs' component={DocumentPortal} onEnter={this.requireLogin.bind(this)}/>
-                 <Route exact path='/editor/:id' component={EditorApp} onEnter={this.requireLogin.bind(this)}/> 
-                {/* both /roster and /roster/:number begin with /roster */}
                 <Route path='/register' component={Register}/>
             </Switch>
         </HashRouter>
