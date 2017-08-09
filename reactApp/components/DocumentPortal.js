@@ -1,6 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 import { Route, Link } from 'react-router-dom';
+import EditorApp from './Editor'
 
 class DocumentPortal extends React.Component {
   constructor(props) {
@@ -8,6 +9,7 @@ class DocumentPortal extends React.Component {
     this.state = {
         newDocument: '',
         sharedDocumentID: '',
+        documentsArray: []
     };
   }
 
@@ -20,6 +22,7 @@ class DocumentPortal extends React.Component {
   }
 
   handleNewDocumentSubmit() {
+      var self = this;
       var title = this.state.newDocument;
       this.setState({newDocument: ''})
       fetch('http://localhost:3000/new', {
@@ -28,14 +31,16 @@ class DocumentPortal extends React.Component {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            title,
+            title: title,
+            userId: localStorage.getItem('userId')
         })
       })
       .then(function(response) {
         return response.json()
       })
       .then(function(body) {
-        console.log('Body of data: ', body)
+        console.log('Body of data documents: ', body.documents)
+        self.setState({documentsArray: body.documents})
       })
       .catch((err) => {
         console.log('Error!', err)
@@ -43,24 +48,39 @@ class DocumentPortal extends React.Component {
   }
 
   handleSharedDocumentIDSubmit(event) {
+      var self = this;
+      var docID = this.state.sharedDocumentID;
       this.setState({sharedDocumentID: event.target.value})
+      fetch('http://localhost:3000/shared') {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+
+          })
+      }
   }
 
-  handleShowingDocuments() {
+  componentWillMount() {
+      var returnedDocuments = [];
+      var self = this;
       fetch('http://localhost:3000/allDocs', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        // body: JSON.stringify({
-        //     title,
-        // })
+        body: JSON.stringify({
+            userId: localStorage.getItem('userId')
+        })
       })
       .then(function(response) {
         return response.json()
       })
       .then(function(body) {
-        console.log('Body of data: ', body)
+        console.log('Body of data: ', body.documents)
+        returnedDocuments = body.documents
+        self.setState({documentsArray: returnedDocuments})
       })
       .catch((err) => {
         console.log('Error!', err)
@@ -77,7 +97,12 @@ class DocumentPortal extends React.Component {
               value={this.state.newDocument}
               placeholder="New Document Title"/><br/>
           <button type="submit" onClick={() => this.handleNewDocumentSubmit()}>Create Document</button><br/><br/>
-
+          <Route path='/editor/:id' component={EditorApp} />
+          {this.state.documentsArray.map((foundDoc) =>
+              <div key={foundDoc._id}>
+                  <Link to={'/editor/'+ foundDoc._id}>{foundDoc.title}, {foundDoc._id}</Link><br/>
+              </div>
+          )}
           <input
               type="text"
               onChange={(event) => this.handleSharedDocumentIDChange(event)}

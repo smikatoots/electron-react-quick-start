@@ -5,7 +5,7 @@ import { Editor, EditorState, RichUtils, Immutable } from 'draft-js';
 import { Redirect } from 'react-router'
 import Login from './components/Login';
 import Register from './components/Register';
-import EditorApp from './components/App';
+import EditorApp from './components/Editor';
 import DocumentPortal from './components/DocumentPortal'
 
 class Main extends React.Component {
@@ -14,8 +14,8 @@ class Main extends React.Component {
   }
 
   requireLogin() {
-    console.log("here", localStorage.verified)
-    if (!localStorage.verified) return (<Redirect to='/' />);
+    console.log("here", localStorage.getItem('userId'))
+    if (!localStorage.getItem('userId')) return (<Redirect to='/' />);
   }
 
   render() {

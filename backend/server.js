@@ -7,21 +7,18 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local');
 var mongoose = require('mongoose');
 var ReactDOMServer = require('react-dom/server');
-
 var app = express();
 
 mongoose.Promise = global.Promise
 var Models = require('./models')
 var MongoStore = require('connect-mongo')(session)
 var app = express();
-var Document = Models.Document
-var User = Models.User
-
+var Document = Models.Document;
+var User = Models.User;
 var connect = process.env.MONGODB_URI
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
 const port = 3000;
 const server = app.listen(port, function(err) {  
@@ -61,13 +58,20 @@ app.use(session({
   store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
 mongoose.connect(connect);
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 passport.serializeUser((user, done) => {
+    console.log(user._id);
   done(null, user._id);
 });
 
 passport.deserializeUser((id, done) => {
+    console.log('deserialize id', id);
   User.findById(id, (err, user) => {
+      console.log('user', user);
     done(err, user);
   });
 });
@@ -89,9 +93,6 @@ passport.use(new LocalStrategy(function(username, password, done){
   });
 }));
 
-app.use(passport.initialize());
-app.use(passport.session());
-
 app.post('/register', function(req, res) {
 	console.log('registering')
 	if (req.body.username && req.body.password) {
@@ -104,7 +105,8 @@ app.post('/register', function(req, res) {
 			else {
 				new User({
 					username: req.body.username,
-					password: req.body.password
+					password: req.body.password,
+                    documents: []
 				}).save(function(err, user) {
 					if (err) console.log("Error", err);
 					else res.json({success: true});
@@ -122,11 +124,12 @@ app.post('/login', passport.authenticate('local'));
 
 app.use('/login', function(req, res){
 	console.log("req.user", req.user);
-	if (req.user) res.json({success: true});
+	if (req.user) res.json({userId: req.user._id, success: true});
 	else res.json({success: false});
 })
 
 app.post('/new', function(req, res) {
+  var id = req.body.userId
   var newDoc = new Document({
     title: req.body.title,
     content: '',
@@ -139,23 +142,42 @@ app.post('/new', function(req, res) {
     }
     else {
       console.log('Success! Document saved', doc)
-      res.json(doc)
+        User.findById(id, function(err, user) {
+          if (err) {
+              console.log(err)
+          }
+          else {
+              var docArr = user.documents
+              docArr.push(doc._id)
+              User.findOneAndUpdate({_id: user._id}, {documents: docArr}, {new: true})
+              .populate('documents')
+              .exec((err, resp) => {
+                  console.log('New document *actually* saved!', resp)
+                  res.json(resp)
+              })
+              //
+            //   , {
+            //       documents: docArr
+            //   }, function(err, resp, changed) {
+            //
+            //         res.json(docArr)
+            //   })
+          }
+        })
     }
   })
 })
 
-// app.post('/allDocs', function(req, res) {
-//   User.findById(req.user)
-//   .populate('documents')
-//   .exec((user) => {
-//       return user
-//   })
-//   .then((user) => {
-//
-//   })
-// })
+app.post('/allDocs', function(req, res) {
+    var userId = req.body.userId
+    User.findById(userId)
+    .populate('documents')
+    .exec((err, userFound) => {
+        res.json(userFound)
+    })
+})
 
-app.post('/show/:id', function(req, res) {
+app.post('/editor/:id', function(req, res) {
   var id = req.params.id
   Document.findById(id, function(err, doc) {
     if (err) {
@@ -224,15 +246,15 @@ app.post('/save', function(req, res) {
   //               }
   //           }
   //           else {
-              var collabArr = doc.collaborators.slice()
-              collabArr.push(user._id)
-              Document.update({_id: id}, {
-                content: this.editorState,
-                collaborators: collabArr
-              }), function(err, affected, resp) {
-                console.log('Document updated and saved! Collaboratoradded', resp)
-                }
-              }
+            //   var collabArr = doc.collaborators.slice()
+            //   collabArr.push(user._id)
+            //   Document.update({_id: id}, {
+            //     content: this.editorState,
+            //     collaborators: collabArr
+            //   }), function(err, affected, resp) {
+            //     console.log('Document updated and saved! Collaboratoradded', resp)
+            //     }
+            //   }
   //           }
   //         })
   //       }
