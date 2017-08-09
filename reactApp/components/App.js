@@ -1,15 +1,17 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 import { BrowserRouter } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import { ContentState, Editor, EditorState, RichUtils, DefaultDraftBlockRenderMap, convertFromRaw, convertToRaw } from 'draft-js';
+import { Editor, EditorState, RichUtils, DefaultDraftBlockRenderMap } from 'draft-js';
 import Immutable from 'immutable';
 import Toolbar from './Toolbar'
 import Login from './Login'
 import Register from './Register'
-import axios from 'axios'
+
 const io = require('socket.io-client')  
+//const socket = io('http://localhost:3000');
+
 var socket = io.connect('http://localhost:3000');
+
 // import mongoose from 'mongoose';
 // import { Users, Documents } from '../../backend/models'
 
@@ -59,58 +61,8 @@ class EditorApp extends React.Component {
     super(props);
     this.state = {
         editorState: EditorState.createEmpty(),
-        title: '',
-        docId: ''
     };
-    this.onChange = (editorState) => this.setState({editorState});
-  }
-
-  componentWillMount() {
-    var id = this.props.match.params.id;
-    var self = this;
-    axios.post('http://localhost:3000/editor/'+id)
-       .then(function(response) {
-        console.log('Response is this:', response)
-        return response.data
-      })
-      .then(function(body) {
-        console.log('Body of Editor: ', body)
-        console.log("THISEDITORSTATE", self.state.editorState);
-        console.log()
-        var editorStateNew
-        if (body.content.length === 0) {
-          editorStateNew = EditorState.createEmpty()
-        }
-        else {
-          console.log('THIS IS BODY CONTENT:', body.content[body.content.length - 1])
-          var convertedContent = convertFromRaw(JSON.parse(body.content[body.content.length - 1]))
-        // const contentState = ContentState.createFromText(convertedContent);
-        // const editorStateNew = EditorState.push(self.state.editorState, contentState);
-          // console.log("CONTENTSTATE", contentState);
-          editorStateNew = EditorState.createWithContent(convertedContent);
-        }
-        console.log("EDITORSTATE", editorStateNew);
-        // console.log("CONTENT", editorStateNew.getCurrentContent().getPlainText());
-        console.log("TITLE", body.title);
-        // self.setState({
-        //     title: body.title
-        // })
-        console.log("TITLE STATE", self.state);
-        self.setState({
-            title: body.title,
-            editorState: editorStateNew,
-            docId: id
-        })
-        console.log("EDITOR STATE", self.state);
-        // self.setState({
-        //   editorState: editorStateNew,
-        //   title: body.title
-        // })
-        console.log("next state", self.state);
-      })
-      .catch((err) => {
-        console.log('Error is err', err)
-      })
+    //this.onChange = (editorState) => this.setState({editorState});
   }
 
   updateEditorFromSockets(payload) {
@@ -180,51 +132,52 @@ class EditorApp extends React.Component {
   }
 
   _save() {
-      var contentStatte = this.state.editorState.getCurrentContent()
-      var content = convertToRaw(contentStatte)
-      var stringContent = JSON.stringify(content)
-      console.log('this is stringified content',stringContent)
+      var content = this.state.editorState.getCurrentContent().getPlainText();
       fetch('http://localhost:3000/save', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            content: stringContent,
-            docId: this.state.docId
+            content: content,
+            // user: req.user
         })
       })
-      .then(function() {
-        console.log("Saved!");
+      .then(function(response) {
+        console.log('response is this:', response)
+        return response.json()
+      })
+      .then(function(body) {
+        console.log('body is right here: ', body)
       })
       .catch((err) => {
-        console.log('Error is err', err)
+        console.log('error is err', err)
       })
     }
 
   componentDidMount() { 
   console.log(this.props); 
-   if (!this.props.match.params.id) {
+   if (!this.props.docState.sharedDocumentId) {
       // display all docs
     } else {
-      socket.emit('room', {room: this.props.match.params.id});
+      socket.emit('room', {room: this.props.docState.sharedDocumentId});
     }
   }
 
   componentWillReceiveProps(nextProps) {  
-    socket.emit('room', {room: nextProps.match.params.id})
+    socket.emit('room', {room: nextProps.docState.sharedDocumentId})
   }
 
   componentWillUnmount() {  
     socket.emit('leave room', {
-      room: this.props.match.params.id
+      room: this.props.docState.sharedDocumentId
     })
   }
 
   updateEditorInState(newState) {  
     this.setState({newState})
     socket.emit('coding event', {
-      room: this.props.match.params.id,
+      room: this.props.docState.sharedDocumentId,
       editorState: newState
     })   
   }
@@ -232,23 +185,9 @@ class EditorApp extends React.Component {
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
-<<<<<<< HEAD
-        <div id='header'>
-            <Link to='/docs'>
-                <button type="button" className="backButton"><i className="fa fa-arrow-left" aria-hidden="true"></i></button>
-            </Link>
-            <div>
-                <h1>{this.state.title}</h1>
-                <p id="jam-title">Jam Editor</p>
-            </div>
-            <button onClick={() => this._save()}>Save</button>
-        </div>
-=======
-        <h1>{this.state.title}</h1>
+        <h1>Name of Document</h1>
         <p id="jam-title">Jam Editor</p>
-        <Link to='/docs'>Home</Link>
-        <button onClick={this._save.bind(this)}>Save</button>
->>>>>>> cff515937a7e852a5d6d12e4a46bdbff32e3c8f8
+        <button onClick={() => this._save()}>Save</button>
         <Toolbar
           handleFontSizeChange={this._onFontSizeChange.bind(this)}
           handleFormatClick={(style, event) => this._onFormatClick(style, event)}
@@ -262,11 +201,9 @@ class EditorApp extends React.Component {
 
         <div className='editor' style={{border: '1px solid grey', padding: '6px'}}>
           <Editor
-            // className='actualEditor'
-            placeholder='Type your text here'
             customStyleMap={styleMap}
             editorState={this.state.editorState}
-            onChange={this.onChange.bind(this)}
+            onChange={(editorState) => updateEditorInState(editorState)}
             blockRenderMap={extendedBlockRenderMap}
           />
         </div>

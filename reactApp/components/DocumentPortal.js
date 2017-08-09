@@ -2,12 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 import { Route, Link } from 'react-router-dom';
 import EditorApp from './EditorApp'
-
-const LoadEditorApp = (props) => {
-  return (
-    <EditorApp docState={this.state} />
-  );
-}
+import axios from 'axios'
 
 class DocumentPortal extends React.Component {
   constructor(props) {
@@ -31,18 +26,12 @@ class DocumentPortal extends React.Component {
       var self = this;
       var title = this.state.newDocument;
       this.setState({newDocument: ''})
-      fetch('http://localhost:3000/new', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
+      axios.post('http://localhost:3000/new', {
             title: title,
             userId: localStorage.getItem('userId')
         })
-      })
       .then(function(response) {
-        return response.json()
+        return response.data
       })
       .then(function(body) {
         console.log('Body of data documents: ', body.documents)
@@ -57,18 +46,12 @@ class DocumentPortal extends React.Component {
       var self = this;
       var docId = this.state.sharedDocumentID;
       this.setState({sharedDocumentID: ''});
-      fetch('http://localhost:3000/accessShared', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+      axios.post('http://localhost:3000/accessShared', {
               docId,
               userId: localStorage.getItem('userId')
           })
-      })
       .then(function(response) {
-          return response.json()
+          return response.data
       })
       .then(function(body) {
           console.log('Body of documents from accessShared', body.documents);

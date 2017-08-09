@@ -99,7 +99,7 @@ app.post('/new', function(req, res) {
   var id = req.body.userId
   var newDoc = new Document({
     title: req.body.title,
-    content: '',
+    content: [],
     // collaborators: [req.body.user._id]
   })
   newDoc.save(function(err, doc) {
@@ -122,27 +122,17 @@ app.post('/new', function(req, res) {
                   console.log('New document *actually* saved!', resp)
                   res.json(resp)
               })
+              //
+            //   , {
+            //       documents: docArr
+            //   }, function(err, resp, changed) {
+            //
+            //         res.json(docArr)
+            //   })
           }
         })
     }
   })
-})
-
-app.post('/accessShared', function(req, res) {
-    console.log('req.body', req.body);
-    var docId = req.body.docId;
-    var userId = req.body.userId;
-    User.findById(userId)
-    .exec((err, userFound) => {
-        var docArr = userFound.documents;
-        docArr.push(docId);
-        User.findOneAndUpdate({_id: userFound._id}, {documents: docArr}, {new: true})
-        .populate('documents')
-        .exec((err, resp) => {
-            console.log('New shared document saved!', resp)
-            res.json(resp)
-        })
-    })
 })
 
 app.post('/allDocs', function(req, res) {
@@ -169,20 +159,21 @@ app.post('/editor/:id', function(req, res) {
 
 app.post('/save', function(req, res) {
   var docId = req.body.docId;
-  Document.findByIdAndUpdate(docId, {content: req.body.content}, (err, foundDoc) => {
+  Document.findById(docId, (err, foundDoc) => {
       if (err) {
           console.log("Error!", err);
       }
       else {
-          console.log("Success saving!", foundDoc);
+        var docContent = foundDoc.content
+        foundDoc.content.push(req.body.content)
+        foundDoc.save(function(err, savedDoc) {
+          console.log("Success saving!", savedDoc);
+        })
       }
   })
 })
 
-
-const server = app.listen(3000, function () {
-  console.log('Backend server for Electron App running on port 3000!')
-})
+var server = require('http').Server(app);
 
 const io = require('socket.io')(server);
 
@@ -205,5 +196,9 @@ io.on('connection', (socket) => {
     socket.broadcast.to(data.room).emit('receive code', data);
   });
 });
+
+server.listen(3000, function () {
+  console.log('Backend server for Electron App running on port 3000!')
+})
 
 module.exports = app;
