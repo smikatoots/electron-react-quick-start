@@ -63,7 +63,7 @@ class EditorApp extends React.Component {
   }
 
   updateEditorFromSockets(payload) {
-    this.setState({editorState: payload.newEditor})
+    this.setState({payload.newEditor})
   }
 
   _onFormatClick(style) {
@@ -171,7 +171,7 @@ class EditorApp extends React.Component {
   }
 
   updateEditorInState(newState) {  
-    this.setState({editorState: newState})
+    this.setState({newState})
     socket.emit('coding event', {
       room: this.props.docState.sharedDocumentId,
       editorState: newState
