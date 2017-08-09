@@ -2,12 +2,12 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 import { BrowserRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { ContentState, Editor, EditorState, RichUtils, DefaultDraftBlockRenderMap } from 'draft-js';
+import { ContentState, Editor, EditorState, RichUtils, DefaultDraftBlockRenderMap, convertFromRaw, convertToRaw } from 'draft-js';
 import Immutable from 'immutable';
 import Toolbar from './Toolbar'
 import Login from './Login'
 import Register from './Register'
-
+import axios from 'axios'
 const io = require('socket.io-client')  
 var socket = io.connect('http://localhost:3000');
 // import mongoose from 'mongoose';
@@ -62,28 +62,35 @@ class EditorApp extends React.Component {
         title: '',
         docId: ''
     };
-    //this.onChange = (editorState) => this.setState({editorState});
+    this.onChange = (editorState) => this.setState({editorState});
   }
 
   componentWillMount() {
     var id = this.props.match.params.id;
     var self = this;
-    fetch('http://localhost:3000/editor/'+id, {
-        method: 'POST'
-      })
+    axios.post('http://localhost:3000/editor/'+id)
        .then(function(response) {
         console.log('Response is this:', response)
-        return response.json()
+        return response.data
       })
       .then(function(body) {
         console.log('Body of Editor: ', body)
         console.log("THISEDITORSTATE", self.state.editorState);
-        const contentState = ContentState.createFromText(body.content);
+        console.log()
+        var editorStateNew
+        if (body.content.length === 0) {
+          editorStateNew = EditorState.createEmpty()
+        }
+        else {
+          console.log('THIS IS BODY CONTENT:', body.content[body.content.length - 1])
+          var convertedContent = convertFromRaw(JSON.parse(body.content[body.content.length - 1]))
+        // const contentState = ContentState.createFromText(convertedContent);
         // const editorStateNew = EditorState.push(self.state.editorState, contentState);
-        const editorStateNew = EditorState.createWithContent(contentState);
-        console.log("CONTENTSTATE", contentState);
+          // console.log("CONTENTSTATE", contentState);
+          editorStateNew = EditorState.createWithContent(convertedContent);
+        }
         console.log("EDITORSTATE", editorStateNew);
-        console.log("CONTENT", editorStateNew.getCurrentContent().getPlainText());
+        // console.log("CONTENT", editorStateNew.getCurrentContent().getPlainText());
         console.log("TITLE", body.title);
         // self.setState({
         //     title: body.title
@@ -173,14 +180,17 @@ class EditorApp extends React.Component {
   }
 
   _save() {
-      var content = this.state.editorState.getCurrentContent().getPlainText();
+      var contentStatte = this.state.editorState.getCurrentContent()
+      var content = convertToRaw(contentStatte)
+      var stringContent = JSON.stringify(content)
+      console.log('this is stringified content',stringContent)
       fetch('http://localhost:3000/save', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            content: content,
+            content: stringContent,
             docId: this.state.docId
         })
       })
@@ -225,7 +235,7 @@ class EditorApp extends React.Component {
         <h1>{this.state.title}</h1>
         <p id="jam-title">Jam Editor</p>
         <Link to='/docs'>Home</Link>
-        <button onClick={() => this._save()}>Save</button>
+        <button onClick={this._save.bind(this)}>Save</button>
         <Toolbar
           handleFontSizeChange={this._onFontSizeChange.bind(this)}
           handleFormatClick={(style, event) => this._onFormatClick(style, event)}
@@ -241,7 +251,7 @@ class EditorApp extends React.Component {
           <Editor
             customStyleMap={styleMap}
             editorState={this.state.editorState}
-            onChange={this.updateEditorInState.bind(this)}
+            onChange={this.onChange.bind(this)}
             blockRenderMap={extendedBlockRenderMap}
           />
         </div>

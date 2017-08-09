@@ -22,7 +22,7 @@ var DocumentsSchema = schema({
         type: String
     },
     content: {
-        type: String
+        type: Array
     },
 	author: {
         type: mongoose.Schema.Types.ObjectId,
