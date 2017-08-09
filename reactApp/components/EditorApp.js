@@ -7,7 +7,7 @@ import Toolbar from './Toolbar'
 import Login from './Login'
 import Register from './Register'
 
-const io = require('socket.io-client')  
+const io = require('socket.io-client')
 const socket = io();
 // import mongoose from 'mongoose';
 // import { Users, Documents } from '../../backend/models'
@@ -70,22 +70,22 @@ class EditorApp extends React.Component {
   componentWillMount() {
     console.log(this.props.match.params.id)
     var id = localStorage.getItem('userId')
-    fetch('http://localhost:3000/editor/:'+id, {
+    fetch('http://localhost:3000/editor/'+id, {
         method: 'POST'
       })
        .then(function(response) {
-        console.log('response is this:', response)
+        console.log('Response is this:', response)
         return response.json()
       })
       .then(function(body) {
-        console.log('body is right here: ', body)
+        console.log('Body is right here: ', body)
         this.setState({
           editorState: body.content,
           title: body.title
         })
       })
       .catch((err) => {
-        console.log('error is err', err)
+        console.log('Error is err', err)
       })
   }
 
@@ -175,7 +175,7 @@ class EditorApp extends React.Component {
       })
     }
 
-  componentDidMount() {  
+  componentDidMount() {
    if (this.props.doc.id === undefined) {
       // display all docs
     } else {
@@ -183,22 +183,22 @@ class EditorApp extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {  
+  componentWillReceiveProps(nextProps) {
     socket.emit('room', {room: nextProps.doc.id})
   }
 
-  componentWillUnmount() {  
+  componentWillUnmount() {
     socket.emit('leave room', {
       room: this.props.doc.id
     })
   }
 
-  updateEditorInState(newState) {  
+  updateEditorInState(newState) {
     this.setState({editorState: newState})
     socket.emit('coding event', {
       room: this.props.doc.id,
       editorState: newState
-    })   
+    })
   }
 
   render() {

@@ -155,26 +155,14 @@ app.post('/allDocs', function(req, res) {
 })
 
 app.post('/editor/:id', function(req, res) {
-  var id = req.params.id.slice(':')[1]
+  var id = req.params.id;
   Document.findById(id, function(err, doc) {
     if (err) {
-      console.log('error in finding document', id)
+      console.log('Error in finding document', id)
     }
     else {
-      User.findById(req.user._id, function(err, user) {
-        if (err) {
-          console.log('couldnt find user', user)
-        }
-        else {
-          var userDocs = user.documents
-          userDocs.push(doc._id)
-          User.update({_id: user._id}, {documents: userDocs}),
-          function(err, affected, resp) {
-            console.log('User model updated', resp)
-            res.json(doc)
-          }
-        }
-      })
+      console.log('Document found', id, doc);
+      res.json(doc);
     }
   })
 })
@@ -243,9 +231,9 @@ const server = app.listen(3000, function () {
   console.log('Backend server for Electron App running on port 3000!')
 })
 
-const io = require('socket.io')(server); 
+const io = require('socket.io')(server);
 
-io.on('connection', (socket) => {  
+io.on('connection', (socket) => {
   console.log('a user connected');
 
   socket.on('disconnect', () => {

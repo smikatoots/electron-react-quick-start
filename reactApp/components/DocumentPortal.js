@@ -1,7 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 import { Route, Link } from 'react-router-dom';
-import EditorApp from './Editor'
+import EditorApp from './EditorApp'
 
 const LoadEditorApp = (props) => {
   return (
