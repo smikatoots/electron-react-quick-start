@@ -1,13 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 import { Route, Link } from 'react-router-dom';
-import EditorApp from './Editor'
-
-const LoadEditorApp = (props) => {
-  return (
-    <EditorApp docState={this.state} />
-  );
-}
+import EditorApp from './App'
 
 class DocumentPortal extends React.Component {
   constructor(props) {
@@ -111,7 +105,7 @@ class DocumentPortal extends React.Component {
               value={this.state.newDocument}
               placeholder="New Document Title"/><br/>
           <button type="submit" onClick={() => this.handleNewDocumentSubmit()}>Create Document</button><br/><br/>
-          <Route path='/editor/:id' render={LoadEditorApp} />
+          <Route path='/editor/:id' render={(props) => {console.log("STATE", this.state); return (<EditorApp {...props} docState={this.state.sharedDocumentID} />)}} />
           {this.state.documentsArray.map((foundDoc) =>
               <div key={foundDoc._id}>
                   <Link to={'/editor/'+ foundDoc._id}>{foundDoc.title}, {foundDoc._id}</Link><br/>

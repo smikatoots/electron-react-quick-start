@@ -8,7 +8,10 @@ import Login from './Login'
 import Register from './Register'
 
 const io = require('socket.io-client')  
-const socket = io();
+//const socket = io('http://localhost:3000');
+
+var socket = io.connect('http://localhost:3000');
+
 // import mongoose from 'mongoose';
 // import { Users, Documents } from '../../backend/models'
 
@@ -63,7 +66,7 @@ class EditorApp extends React.Component {
   }
 
   updateEditorFromSockets(payload) {
-    this.setState({payload.newEditor})
+    this.setState({payload})
   }
 
   _onFormatClick(style) {
@@ -152,7 +155,8 @@ class EditorApp extends React.Component {
       })
     }
 
-  componentDidMount() {  
+  componentDidMount() { 
+  console.log(this.props); 
    if (!this.props.docState.sharedDocumentId) {
       // display all docs
     } else {
@@ -199,7 +203,7 @@ class EditorApp extends React.Component {
           <Editor
             customStyleMap={styleMap}
             editorState={this.state.editorState}
-            onChange={this.updateEditorInState.bind(this)}
+            onChange={(editorState) => updateEditorInState(editorState)}
             blockRenderMap={extendedBlockRenderMap}
           />
         </div>
