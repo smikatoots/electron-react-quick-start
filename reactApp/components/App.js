@@ -6,6 +6,9 @@ import Immutable from 'immutable';
 import Toolbar from './Toolbar'
 import Login from './Login'
 import Register from './Register'
+
+const io = require('socket.io-client')  
+const socket = io();
 // import mongoose from 'mongoose';
 // import { Users, Documents } from '../../backend/models'
 
@@ -56,7 +59,11 @@ class EditorApp extends React.Component {
     this.state = {
         editorState: EditorState.createEmpty(),
     };
-    this.onChange = (editorState) => this.setState({editorState});
+    //this.onChange = (editorState) => this.setState({editorState});
+  }
+
+  updateEditorFromSockets(payload) {
+    this.setState({editorState: payload.newEditor})
   }
 
   _onFormatClick(style) {
@@ -145,6 +152,32 @@ class EditorApp extends React.Component {
       })
     }
 
+  componentDidMount() {  
+   if (this.props.doc.id === undefined) {
+      // display all docs
+    } else {
+      socket.emit('room', {room: this.props.doc.id});
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {  
+    socket.emit('room', {room: nextProps.doc.id})
+  }
+
+  componentWillUnmount() {  
+    socket.emit('leave room', {
+      room: this.props.doc.id
+    })
+  }
+
+  updateEditorInState(newState) {  
+    this.setState({editorState: newState})
+    socket.emit('coding event', {
+      room: this.props.doc.id,
+      editorState: newState
+    })   
+  }
+
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
@@ -166,7 +199,7 @@ class EditorApp extends React.Component {
           <Editor
             customStyleMap={styleMap}
             editorState={this.state.editorState}
-            onChange={this.onChange}
+            onChange={this.updateEditorInState.bind(this)}
             blockRenderMap={extendedBlockRenderMap}
           />
         </div>
