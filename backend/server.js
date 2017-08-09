@@ -122,17 +122,27 @@ app.post('/new', function(req, res) {
                   console.log('New document *actually* saved!', resp)
                   res.json(resp)
               })
-              //
-            //   , {
-            //       documents: docArr
-            //   }, function(err, resp, changed) {
-            //
-            //         res.json(docArr)
-            //   })
           }
         })
     }
   })
+})
+
+app.post('/accessShared', function(req, res) {
+    console.log('req.body', req.body);
+    var docId = req.body.docId;
+    var userId = req.body.userId;
+    User.findById(userId)
+    .exec((err, userFound) => {
+        var docArr = userFound.documents;
+        docArr.push(docId);
+        User.findOneAndUpdate({_id: userFound._id}, {documents: docArr}, {new: true})
+        .populate('documents')
+        .exec((err, resp) => {
+            console.log('New shared document saved!', resp)
+            res.json(resp)
+        })
+    })
 })
 
 app.post('/allDocs', function(req, res) {
