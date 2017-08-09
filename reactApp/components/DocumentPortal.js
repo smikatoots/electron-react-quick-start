@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+import axios from 'axios';
 import { Route, Link } from 'react-router-dom';
 import EditorApp from './EditorApp'
 import axios from 'axios'
@@ -27,15 +28,11 @@ class DocumentPortal extends React.Component {
       var title = this.state.newDocument;
       this.setState({newDocument: ''})
       axios.post('http://localhost:3000/new', {
-            title: title,
-            userId: localStorage.getItem('userId')
-        })
-      .then(function(response) {
-        return response.data
+        title: title
       })
-      .then(function(body) {
-        console.log('Body of data documents: ', body.documents)
-        self.setState({documentsArray: body.documents})
+      .then(function(response) {
+        console.log('Body of data documents: ', response.data.documents)
+        self.setState({documentsArray: response.data.documents})
       })
       .catch((err) => {
         console.log('Error!', err)
@@ -47,36 +44,23 @@ class DocumentPortal extends React.Component {
       var docId = this.state.sharedDocumentID;
       this.setState({sharedDocumentID: ''});
       axios.post('http://localhost:3000/accessShared', {
-              docId,
-              userId: localStorage.getItem('userId')
-          })
-      .then(function(response) {
-          return response.data
+          docId
       })
-      .then(function(body) {
-          console.log('Body of documents from accessShared', body.documents);
-          self.setState({documentsArray: body.documents})
+      .then(function(response) {
+          console.log('Body of documents from accessShared', response.data.documents);
+          self.setState({documentsArray: response.data.documents})
       })
   }
 
   componentWillMount() {
       var returnedDocuments = [];
       var self = this;
-      fetch('http://localhost:3000/allDocs', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            userId: localStorage.getItem('userId')
-        })
+      axios.post('http://localhost:3000/allDocs', {
+        userId: localStorage.getItem('userId')
       })
       .then(function(response) {
-        return response.json()
-      })
-      .then(function(body) {
-        console.log('Body of data: ', body.documents)
-        returnedDocuments = body.documents
+        console.log('Body of data: ', response.data.documents)
+        returnedDocuments = response.data.documents
         self.setState({documentsArray: returnedDocuments})
       })
       .catch((err) => {
