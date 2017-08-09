@@ -182,18 +182,13 @@ class EditorApp extends React.Component {
         body: JSON.stringify({
             content: content,
             docId: this.state.docId
-            userId: localStorage.getItem('userId')
         })
       })
-      .then(function(response) {
-        console.log('response is this:', response)
-        return response.json()
-      })
-      .then(function(body) {
-        console.log('body is right here: ', body)
+      .then(function() {
+        console.log("Saved!");
       })
       .catch((err) => {
-        console.log('error is err', err)
+        console.log('Error is err', err)
       })
     }
 
