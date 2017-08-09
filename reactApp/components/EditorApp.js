@@ -2,7 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 import { BrowserRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { ContentState, Editor, EditorState, RichUtils, DefaultDraftBlockRenderMap } from 'draft-js';
+import { ContentState, Editor, EditorState, RichUtils, DefaultDraftBlockRenderMap, convertFromRaw, convertToRaw } from 'draft-js';
 import Immutable from 'immutable';
 import Toolbar from './Toolbar'
 import Login from './Login'
@@ -62,7 +62,7 @@ class EditorApp extends React.Component {
         title: '',
         docId: ''
     };
-    //this.onChange = (editorState) => this.setState({editorState});
+    this.onChange = (editorState) => this.setState({editorState});
   }
 
   componentWillMount() {
@@ -107,7 +107,7 @@ class EditorApp extends React.Component {
   }
 
   updateEditorFromSockets(payload) {
-    this.setState({payload})
+    this.setState({editorState: payload})
   }
 
   _onFormatClick(style) {
@@ -193,17 +193,18 @@ class EditorApp extends React.Component {
     }
 
   componentDidMount() { 
-  console.log(this.props); 
-   if (!this.props.match.params.id) {
-      // display all docs
-    } else {
-      socket.emit('room', {room: this.props.match.params.id});
-    }
+    socket.emit('room', {room: this.props.match.params.id});
+    socket.on('receive code', (payload) => {
+      var content = EditorState.createWithContent(convertFromRaw(payload))
+      console.log('content', content)
+      this.setState({editorState: content});
+    });
   }
 
-  componentWillReceiveProps(nextProps) {  
-    socket.emit('room', {room: nextProps.match.params.id})
-  }
+  // componentWillReceiveProps(nextProps) {  
+  //   console.log("nextProps", nextProps)
+  //   socket.emit('room', {room: nextProps.match.params.id})
+  // }
 
   componentWillUnmount() {  
     socket.emit('leave room', {
@@ -211,11 +212,11 @@ class EditorApp extends React.Component {
     })
   }
 
-  updateEditorInState(newState) {  
-    this.setState({newState})
+  updateEditorInState(newState) { 
+    this.setState({editorState: newState});
     socket.emit('coding event', {
       room: this.props.match.params.id,
-      editorState: newState
+      contentState: convertToRaw(newState.getCurrentContent())
     })   
   }
 
@@ -241,7 +242,7 @@ class EditorApp extends React.Component {
           <Editor
             customStyleMap={styleMap}
             editorState={this.state.editorState}
-            onChange={this.updateEditorInState.bind(this)}
+            onChange={(editorState) => this.updateEditorInState(editorState)}
             blockRenderMap={extendedBlockRenderMap}
           />
         </div>

@@ -90,13 +90,12 @@ app.post('/register', function(req, res) {
 app.post('/login', passport.authenticate('local'));
 
 app.use('/login', function(req, res){
-	console.log("req.user", req.user);
 	if (req.user) res.json({userId: req.user._id, success: true});
 	else res.json({success: false});
 })
 
 app.post('/new', function(req, res) {
-  var id = req.body.userId
+  var id = req.user._id; //req.body.userId
   var newDoc = new Document({
     title: req.body.title,
     content: '',
@@ -136,7 +135,8 @@ app.post('/new', function(req, res) {
 })
 
 app.post('/allDocs', function(req, res) {
-    var userId = req.body.userId
+	console.log("req.user", req.user);
+    var userId = req.user._id; //req.body.userId
     User.findById(userId)
     .populate('documents')
     .exec((err, userFound) => {
@@ -189,7 +189,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('coding event', function(data) {
-    socket.broadcast.to(data.room).emit('receive code', data);
+    socket.broadcast.to(data.room).emit('receive code', data.contentState);
   });
 });
 
