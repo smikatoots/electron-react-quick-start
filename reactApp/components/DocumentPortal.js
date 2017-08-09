@@ -3,7 +3,6 @@ var ReactDOM = require('react-dom');
 import axios from 'axios';
 import { Route, Link } from 'react-router-dom';
 import EditorApp from './EditorApp'
-import axios from 'axios'
 
 class DocumentPortal extends React.Component {
   constructor(props) {
