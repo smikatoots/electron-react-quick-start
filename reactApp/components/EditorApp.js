@@ -289,6 +289,7 @@ class EditorApp extends React.Component {
             <div>
                 <h1>{this.state.title}</h1>
                 <p id="jam-title">Jam Editor</p>
+                <p id="id-text">Sharing ID: {this.state.docId}</p>
             </div>
             <button onClick={() => this._save()}>Save</button>
             <button onClick={() => this.toggleHistory()}>History</button>

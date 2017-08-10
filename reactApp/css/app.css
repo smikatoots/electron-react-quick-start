@@ -46,6 +46,10 @@ h1 {
     line-height: 10px;
     font-size: 20px;
 }
+#id-text {
+    line-height: 10px;
+    font-size: 15px;
+}
 button {
     background-color: white;
     border: 0.1px solid grey;
