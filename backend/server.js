@@ -164,8 +164,10 @@ app.post('/save', function(req, res) {
           console.log("Error!", err);
       }
       else {
-        var docContent = foundDoc.content
-        foundDoc.content.push(req.body.content)
+        var docContent = req.body.content
+        var saveTime = new Date();
+        var docObj = {time: saveTime, content: docContent}
+        foundDoc.content.push(docObj)
         foundDoc.save(function(err, savedDoc) {
           console.log("Success saving!", savedDoc);
         })

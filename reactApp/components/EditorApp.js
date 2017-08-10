@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom';
 import { ContentState, Editor, EditorState, RichUtils, DefaultDraftBlockRenderMap, convertFromRaw, convertToRaw } from 'draft-js';
 import Immutable from 'immutable';
 import Toolbar from './Toolbar'
-import Login from './Login'
-import Register from './Register'
+import Login from './Login';
+import Register from './Register';
+import History from './History';
 import axios from 'axios'
 const io = require('socket.io-client')
 var socket = io.connect('http://localhost:3000');
@@ -60,7 +61,9 @@ class EditorApp extends React.Component {
     this.state = {
         editorState: EditorState.createEmpty(),
         title: '',
-        docId: ''
+        docId: '',
+        history: false,
+        historyArr: []
     };
     this.onChange = (editorState) => this.setState({editorState});
   }
@@ -83,7 +86,7 @@ class EditorApp extends React.Component {
         }
         else {
           console.log('THIS IS BODY CONTENT:', body.content[body.content.length - 1])
-          var convertedContent = convertFromRaw(JSON.parse(body.content[body.content.length - 1]))
+          var convertedContent = convertFromRaw(JSON.parse(body.content[body.content.length - 1].content))
         // const contentState = ContentState.createFromText(convertedContent);
         // const editorStateNew = EditorState.push(self.state.editorState, contentState);
           // console.log("CONTENTSTATE", contentState);
@@ -92,14 +95,17 @@ class EditorApp extends React.Component {
         console.log("EDITORSTATE", editorStateNew);
         // console.log("CONTENT", editorStateNew.getCurrentContent().getPlainText());
         console.log("TITLE", body.title);
-        // self.setState({
+        // self.setState({ 
         //     title: body.title
         // })
         console.log("TITLE STATE", self.state);
+        var historyArray = self.state.historyArr
+        historyArray.push(body.content)
         self.setState({
             title: body.title,
             editorState: editorStateNew,
-            docId: id
+            docId: id,
+            historyArr: historyArray
         })
         console.log("EDITOR STATE", self.state);
         // self.setState({
@@ -230,7 +236,13 @@ class EditorApp extends React.Component {
       contentState: convertToRaw(newState.getCurrentContent())
     })
   }
-
+  toggleHistory() {
+    var other = !this.state.history
+    this.setState({
+      history: other
+    })
+    console.log('this is history array: ',this.state.historyArr)
+  }
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
@@ -242,7 +254,8 @@ class EditorApp extends React.Component {
                 <h1>{this.state.title}</h1>
                 <p id="jam-title">Jam Editor</p>
             </div>
-            <button onClick={() => this._save()}>Save</button>
+            <button onClick={() => this._save()}>Save</button> 
+            <button onClick={() => this.toggleHistory()}>History</button>
         </div>
         <Toolbar
           handleFontSizeChange={this._onFontSizeChange.bind(this)}
@@ -265,6 +278,7 @@ class EditorApp extends React.Component {
             blockRenderMap={extendedBlockRenderMap}
           />
         </div>
+        {this.state.history ? <History history={this.state.content}></History> : null}
       </div>
     );
   }
