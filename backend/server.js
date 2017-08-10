@@ -20,6 +20,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+const colors = ['YELLOW', 'GREEN', 'BLUE', 'PURPLE', 'ORANGE', 'PINK'];
+
 app.use(session({
   secret: 'keyboard cat',
   store: new MongoStore({mongooseConnection: mongoose.connection})
@@ -190,10 +192,11 @@ io.on('connection', (socket) => {
 
   socket.on('room', function(data) {
     socket.join(data.room);
+    socket.emit('room', colors[socket.adapter.rooms[data.room].length - 1])
   });
 
   socket.on('coding event', function(data) {
-    socket.broadcast.to(data.room).emit('receive code', data.contentState);
+    socket.broadcast.to(data.room).emit('receive code', {contentState: data.contentState, anchorKey: data.anchorKey, focusKey: data.focusKey, anchorOffset: data.anchorOffset, focusOffset: data.focusOffset});
   });
 });
 

@@ -2,7 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 import { BrowserRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { ContentState, Editor, EditorState, RichUtils, DefaultDraftBlockRenderMap, convertFromRaw, convertToRaw } from 'draft-js';
+import { ContentState, Editor, EditorState, RichUtils, DefaultDraftBlockRenderMap, convertFromRaw, convertToRaw, Modifier, SelectionState } from 'draft-js';
 import Immutable from 'immutable';
 import Toolbar from './Toolbar'
 import Login from './Login'
@@ -52,6 +52,12 @@ const styleMap = {
     'FONT_COLOR_YELLOW': {
       color: 'yellow',
     },
+    'HIGHLIGHT_YELLOW': {
+      backgroundColor: 'yellow'
+    },
+    'HIGHLIGHT_GREEN': {
+      backgroundColor: 'green'
+    }
 };
 
 class EditorApp extends React.Component {
@@ -63,6 +69,8 @@ class EditorApp extends React.Component {
         docId: ''
     };
     this.onChange = (editorState) => this.setState({editorState});
+    this.color = null;
+    this.prevHighlight = null;
   }
 
   componentWillMount() {
@@ -106,7 +114,7 @@ class EditorApp extends React.Component {
         //   editorState: editorStateNew,
         //   title: body.title
         // })
-        console.log("next state", self.state);
+        // console.log("next state", self.state);
       })
       .catch((err) => {
         console.log('Error is err', err)
@@ -203,11 +211,39 @@ class EditorApp extends React.Component {
     }
 
   componentDidMount() { 
+    var self = this;
     socket.emit('room', {room: this.props.match.params.id});
+    socket.on('room', (payload) => {self.color = payload});
     socket.on('receive code', (payload) => {
-      var content = EditorState.createWithContent(convertFromRaw(payload))
-      console.log('content', content)
-      this.setState({editorState: content});
+      var curState = self.state.editorState;
+      var curSelection = curState.getSelection();
+      //var temp = EditorState.createWithContent(convertFromRaw(payload.contentState));
+      //var raw = convertFromRaw(payload.contentState);
+
+      var selection = SelectionState.createEmpty('highlight');
+      console.log("Payload", payload)
+      var update = selection.merge({
+        focusKey: payload.focusKey,
+        anchorKey: payload.anchorKey,
+        anchorOffset: payload.anchorOffset,
+        focusOffset: payload.focusOffset
+      });
+
+      var editor;
+
+      if (self.prevHighlight) {
+        editor = EditorState.acceptSelection(curState, self.prevHighlight);
+        editor = RichUtils.toggleInlineStyle(editor, 'HIGHLIGHT_' + self.color);
+        self.prevHighlight = null;
+      }
+      editor = EditorState.acceptSelection(curState, update);
+      editor = RichUtils.toggleInlineStyle(editor, 'HIGHLIGHT_' + self.color);
+      self.prevHighlight = update;
+      editor = EditorState.forceSelection(editor, curSelection);
+      //var content = Modifier.applyInlineStyle(raw, update, 'HIGHLIGHT_' + self.color);
+      //var editor = EditorState.createWithContent(content);
+      //var content2 = Modifier.applyInlineStyle(content.getCurrentContent(), content.getSelection(), 'BOLD');
+      this.setState({editorState: editor});
     });
   }
 
@@ -226,7 +262,11 @@ class EditorApp extends React.Component {
     this.setState({editorState: newState});
     socket.emit('coding event', {
       room: this.props.match.params.id,
-      contentState: convertToRaw(newState.getCurrentContent())
+      contentState: convertToRaw(newState.getCurrentContent()),
+      anchorKey: newState.getSelection().getAnchorKey(),
+      anchorOffset: newState.getSelection().getAnchorOffset(),
+      focusKey: newState.getSelection().getFocusKey(),
+      focusOffset: newState.getSelection().getFocusOffset()
     })   
   }
 
