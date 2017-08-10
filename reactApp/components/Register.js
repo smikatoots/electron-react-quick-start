@@ -46,7 +46,7 @@ class Register extends React.Component {
             <form onSubmit={this.handleSubmit.bind(this)}>
               <input type="text" value={this.state.username} onChange={(event) => this.handleUsernameChange(event)} placeholder="Username"/><br/>
               <input type="password" value={this.state.password} onChange={(event) => this.handlePasswordChange(event)} placeholder="Password"/><br/>
-              <input type='submit' value='Submit' />
+              <button type='button' value='Submit' />
             </form>
             <Route path='/login' component={Login}/>
             <button type="button"><Link to='/login'>Go Back to Login</Link></button>
