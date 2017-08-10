@@ -85,9 +85,6 @@ class EditorApp extends React.Component {
         return response.data
       })
       .then(function(body) {
-        console.log('Body of Editor: ', body)
-        console.log("THISEDITORSTATE", self.state.editorState);
-        console.log()
         var editorStateNew
         if (body.content.length === 0) {
           editorStateNew = EditorState.createEmpty()
@@ -95,25 +92,13 @@ class EditorApp extends React.Component {
         else {
           console.log('THIS IS BODY CONTENT:', body.content[body.content.length - 1])
           var convertedContent = convertFromRaw(JSON.parse(body.content[body.content.length - 1].content))
-        // const contentState = ContentState.createFromText(convertedContent);
-        // const editorStateNew = EditorState.push(self.state.editorState, contentState);
-          // console.log("CONTENTSTATE", contentState);
           editorStateNew = EditorState.createWithContent(convertedContent);
         }
-        console.log("EDITORSTATE", editorStateNew);
-        // console.log("CONTENT", editorStateNew.getCurrentContent().getPlainText());
-        console.log("TITLE", body.title);
-        // self.setState({ 
-        //     title: body.title
-        // })
-        console.log("TITLE STATE", self.state);
-        var historyArray = self.state.historyArr
-        historyArray.push(body.content)
         self.setState({
             title: body.title,
             editorState: editorStateNew,
             docId: id,
-            historyArr: historyArray
+            historyArr: body.content
         })
         console.log("EDITOR STATE", self.state);
         // self.setState({
@@ -281,7 +266,7 @@ class EditorApp extends React.Component {
     this.setState({
       history: other
     })
-    console.log('this is history array: ',this.state.historyArr)
+    console.log('this is history array: ',this.state.historyArr[0])
   }
   render() {
     return (
@@ -318,7 +303,7 @@ class EditorApp extends React.Component {
             blockRenderMap={extendedBlockRenderMap}
           />
         </div>
-        {this.state.history ? <History history={this.state.content}></History> : null}
+        {this.state.history ? <div><History history={this.state.historyArr}></History></div> : null}
       </div>
     );
   }
