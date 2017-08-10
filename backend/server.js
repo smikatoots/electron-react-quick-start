@@ -123,19 +123,39 @@ app.post('/new', function(req, res) {
                   console.log('New document *actually* saved!', resp)
                   res.json(resp)
               })
-              //
-            //   , {
-            //       documents: docArr
-            //   }, function(err, resp, changed) {
-            //
-            //         res.json(docArr)
-            //   })
           }
         })
     }
   })
 })
-
+app.post('/accessShared', function(req, res) {
+  var docId = req.body.docId
+  var id = req.user._id
+  Document.findById(id, function(err, foundDoc) {
+    if (err) {
+      console.log('unable to find document', err)
+    }
+    else {
+      console.log('found a document correctly', id)
+      User.findById(id, function(err, foundUser) {
+          if (err) {
+              console.log(err)
+          }
+          else {
+            console.log('user is found', foundUser)
+              var docArr = foundUser.documents
+              docArr.push(docId)
+              User.findOneAndUpdate({_id: foundUser._id}, {documents: docArr})
+              .populate('documents')
+              .exec((err, resp) => {
+                  console.log('New document *actually* saved!', resp)
+                  res.json(resp)
+              })
+          }
+        })
+    }
+  })
+})
 app.post('/allDocs', function(req, res) {
 	console.log("req.user", req.user);
     var userId = req.user._id; //req.body.userId

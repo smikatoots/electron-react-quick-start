@@ -7,14 +7,15 @@ class History extends React.Component {
         super(props)
     }
     render() {
+        console.log(this.props.history)
         return(
             <div>
-                {/* {this.props.history.map((time) => {
-                item.time
-            })} */}
-            hi!
+                  {this.props.history.map((historyObj) =>
+                      (<div key={historyObj.time}><button onClick={() => {this.props.updateState(historyObj.content)}}>{historyObj.time}</button><br/></div>)
+                     )}
             </div>
         )
+
     }
 }
 
