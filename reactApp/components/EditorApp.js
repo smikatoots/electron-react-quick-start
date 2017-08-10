@@ -224,7 +224,7 @@ class EditorApp extends React.Component {
     socket.on('receive code', (payload) => {
       var curState = self.state.editorState;
       var curSelection = curState.getSelection();
-      //var temp = EditorState.createWithContent(convertFromRaw(payload.contentState));
+      var temp = EditorState.createWithContent(convertFromRaw(payload.contentState));
       //var raw = convertFromRaw(payload.contentState);
 
       var selection = SelectionState.createEmpty('highlight');
@@ -236,14 +236,14 @@ class EditorApp extends React.Component {
         focusOffset: payload.focusOffset
       });
 
-      var editor;
+      var editor = temp;
 
       if (self.prevHighlight) {
-        editor = EditorState.acceptSelection(curState, self.prevHighlight);
+        editor = EditorState.acceptSelection(editor, self.prevHighlight);
         editor = RichUtils.toggleInlineStyle(editor, 'HIGHLIGHT_' + self.color);
         self.prevHighlight = null;
       }
-      editor = EditorState.acceptSelection(curState, update);
+      editor = EditorState.acceptSelection(editor, update);
       editor = RichUtils.toggleInlineStyle(editor, 'HIGHLIGHT_' + self.color);
       self.prevHighlight = update;
       editor = EditorState.forceSelection(editor, curSelection);
