@@ -11,7 +11,7 @@ class History extends React.Component {
         return(
             <div>
                   {this.props.history.map((historyObj) => 
-                      (<div><button key={historyObj.time}>{historyObj.time}</button><br/></div>)
+                      (<div><button onClick={()=>{this.props.updateState(historyObj.content)}} key={historyObj.time}>{historyObj.time}</button><br/></div>)
                      )}  
             </div>
         )

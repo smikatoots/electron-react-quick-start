@@ -268,6 +268,15 @@ class EditorApp extends React.Component {
     })
     console.log('this is history array: ',this.state.historyArr[0])
   }
+
+  setHistoryState(content) {
+    var convertedContent = convertFromRaw(content)
+    editorStateNew = EditorState.createWithContent(convertedContent);
+    this.setState({
+      editorState: editorStateNew
+    })
+    console.log('History updated!')
+  }
   render() {
     return (
       <div id='content' style={{width: '480px', margin: '0 auto'}}>
@@ -303,7 +312,7 @@ class EditorApp extends React.Component {
             blockRenderMap={extendedBlockRenderMap}
           />
         </div>
-        {this.state.history ? <div><History history={this.state.historyArr}></History></div> : null}
+        {this.state.history ? <div><History history={this.state.historyArr} updateState={this.setHistoryState()}></History></div> : null}
       </div>
     );
   }
