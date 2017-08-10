@@ -10,9 +10,9 @@ class History extends React.Component {
         console.log(this.props.history)
         return(
             <div>
-                  {this.props.history.map((historyObj) => 
-                      (<div><button onClick={()=>{this.props.updateState(historyObj.content)}} key={historyObj.time}>{historyObj.time}</button><br/></div>)
-                     )}  
+                  {this.props.history.map((historyObj) =>
+                      (<div key={historyObj.time}><button onClick={() => {this.props.updateState(historyObj.content)}}>{historyObj.time}</button><br/></div>)
+                     )}
             </div>
         )
 

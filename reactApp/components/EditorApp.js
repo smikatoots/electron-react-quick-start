@@ -202,7 +202,7 @@ class EditorApp extends React.Component {
       })
     }
 
-  componentDidMount() { 
+  componentDidMount() {
     var self = this;
     socket.emit('room', {room: this.props.match.params.id});
     socket.on('room', (payload) => {self.color = payload});
@@ -259,7 +259,7 @@ class EditorApp extends React.Component {
       anchorOffset: newState.getSelection().getAnchorOffset(),
       focusKey: newState.getSelection().getFocusKey(),
       focusOffset: newState.getSelection().getFocusOffset()
-    }) 
+    })
   }
   toggleHistory() {
     var other = !this.state.history
@@ -270,8 +270,10 @@ class EditorApp extends React.Component {
   }
 
   setHistoryState(content) {
-    var convertedContent = convertFromRaw(content)
-    editorStateNew = EditorState.createWithContent(convertedContent);
+      console.log("THIS IS CONTENT", content);
+    var convertedContent = convertFromRaw(JSON.parse(content));
+    console.log(convertedContent);
+    var editorStateNew = EditorState.createWithContent(convertedContent);
     this.setState({
       editorState: editorStateNew
     })
@@ -288,7 +290,7 @@ class EditorApp extends React.Component {
                 <h1>{this.state.title}</h1>
                 <p id="jam-title">Jam Editor</p>
             </div>
-            <button onClick={() => this._save()}>Save</button> 
+            <button onClick={() => this._save()}>Save</button>
             <button onClick={() => this.toggleHistory()}>History</button>
         </div>
         <Toolbar
@@ -312,7 +314,7 @@ class EditorApp extends React.Component {
             blockRenderMap={extendedBlockRenderMap}
           />
         </div>
-        {this.state.history ? <div><History history={this.state.historyArr} updateState={this.setHistoryState()}></History></div> : null}
+        {this.state.history ? <div><History history={this.state.historyArr} updateState={(content) => this.setHistoryState(content)}></History></div> : null}
       </div>
     );
   }
